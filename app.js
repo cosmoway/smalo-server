@@ -3,6 +3,7 @@ var WebSocketServer = require('ws').Server
     , express = require('express')
     , app = express();
 
+app.use(express.static(__dirname + '/'));
 var server = http.createServer(app);
 var wss = new WebSocketServer({server: server});
 
