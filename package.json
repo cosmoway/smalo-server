@@ -1,0 +1,19 @@
+{
+  "name": "smalo-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cosmoway/smalo-server.git"
+  },
+  "author": "COSMOWAY inc.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cosmoway/smalo-server/issues"
+  },
+  "homepage": "https://github.com/cosmoway/smalo-server#readme"
+}
