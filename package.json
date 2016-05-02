@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/cosmoway/smalo-server/issues"
   },
-  "homepage": "https://github.com/cosmoway/smalo-server#readme"
+  "homepage": "https://github.com/cosmoway/smalo-server#readme",
+  "dependencies": {
+    "ws": "^1.1.0"
+  }
 }
