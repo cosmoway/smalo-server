@@ -46,22 +46,11 @@ wss.on('connection', function (ws) {
             } else if (command != null) {
                 if (command == 'lock') {
                     // C-02. 施錠リクエスト
-                    console.log('[DEBUG] receive lock request.');
-
-                    // TODO: Edison に施錠リクエストを送る
-                    setTimeout(function () {
-                        broadcast({state: 'lock'});
-                    }(), 1000);
+                    lock();
 
                 } else if (command == 'unlock') {
                     // C-03. 解錠リクエスト
-                    console.log('[DEBUG] receive unlock request.');
-
-                    // TODO: Edison に解錠リクエストを送る
-                    setTimeout(function () {
-                        broadcast({state: 'unlock'});
-                    }(), 1000);
-
+                    unlock();
                 }
             }
         } catch (e) {
@@ -70,6 +59,30 @@ wss.on('connection', function (ws) {
         }
     });
 });
+
+/**
+ * 施錠処理
+ */
+function lock() {
+    console.log('[DEBUG] receive lock request.');
+
+    // TODO: Edison に施錠リクエストを送る
+    setTimeout(function () {
+        broadcast({state: 'lock'});
+    }(), 1000);
+}
+
+/**
+ * 解錠処理
+ */
+function unlock() {
+    console.log('[DEBUG] receive unlock request.');
+
+    // TODO: Edison に解錠リクエストを送る
+    setTimeout(function () {
+        broadcast({state: 'unlock'});
+    }(), 1000);
+}
 
 /**
  * 接続されているクライアントにデータを broadcast する
