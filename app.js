@@ -44,6 +44,9 @@ wss.on('connection', function (ws) {
                 if (connections.indexOf(ws) < 0) {
                     connections.push(ws);
                     console.log('[DEBUG] increase connection count: %d'.replace(/%d/, connections.length));
+
+                    // TODO: 現在の鍵の状態をクライアントに伝える
+                    ws.send('{"state" : "lock"}');
                 }
 
             } else if (command != null) {
