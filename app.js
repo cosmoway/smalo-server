@@ -14,15 +14,18 @@ var wss = new WebSocketServer({server: server});
 var connections = [];
 
 wss.on('connection', function (ws) {
+    console.log('[DEBUG] open connection.');
 
     ws.on('close', function () {
         connections = connections.filter(function (conn, i) {
             return (conn !== ws);
         });
-        console.log('[DEBUG] close connection. count: %d'.replace(/%d/, connections.length));
+        console.log('[DEBUG] closed connection. count: %d'.replace(/%d/, connections.length));
     });
 
     ws.on('message', function (message) {
+        console.log('[DEBUG] received message: %s'.replace(/%s/, message));
+
         var jsonObject;
         try {
             jsonObject = JSON.parse(message);
