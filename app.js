@@ -3,12 +3,17 @@
  */
 
 var WebSocketServer = require('ws').Server
-    , http = require('http')
+    , https = require('https')
+    , fs = require('fs')
     , express = require('express')
     , app = express();
+var credentials = {
+    key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
+};
 
 app.use(express.static(__dirname + '/public'));
-var server = http.createServer(app);
+var server = https.createServer(credentials, app);
 var wss = new WebSocketServer({server: server});
 
 var connections = [];
@@ -103,4 +108,4 @@ function broadcast(object) {
     console.log('[DEBUG] broadcast message: %s'.replace(/%s/, message));
 }
 
-server.listen(process.env.PORT || 5000);
+server.listen(8443);
