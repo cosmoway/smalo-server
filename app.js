@@ -7,13 +7,41 @@ var WebSocketServer = require('ws').Server
     , fs = require('fs')
     , mysql = require('mysql')
     , express = require('express')
+    , bodyParser = require('body-parser')
+    , route_devices = require('./routes/devices')
     , app = express();
 var credentials = {
     key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
     cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
 };
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
+app.use('/api', route_devices);
+
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+    //log.debug('404 not found error.');
+
+    var err = new Error('Not Found');
+    err.status = 404;
+    err.status_message = 'Request URL Not Found.';
+    next(err);
+});
+
+// error handlers
+app.use(function(err, req, res, next) {
+    //log.debug('catch all(error handler).');
+
+    res.status(err.status || 500);
+    res.json({
+        status: err.status_message,
+        message: err.message
+    });
+});
+
 var server = https.createServer(credentials, app);
 var wss = new WebSocketServer({server: server});
 var dbConnection = mysql.createConnection({
