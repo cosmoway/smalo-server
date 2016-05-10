@@ -5,6 +5,7 @@
 var WebSocketServer = require('ws').Server
     , https = require('https')
     , fs = require('fs')
+    , mysql = require('mysql')
     , express = require('express')
     , app = express();
 var credentials = {
@@ -15,6 +16,19 @@ var credentials = {
 app.use(express.static(__dirname + '/public'));
 var server = https.createServer(credentials, app);
 var wss = new WebSocketServer({server: server});
+var dbConnection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'smalo',
+    password : 'RoMV35ZMQKKLQa8i',
+    database : 'smalo_db'
+});
+dbConnection.connect(function(err) {
+    if (err) {
+        console.error('[mysql] error connecting: ' + err.stack);
+        return;
+    }
+    console.log('[mysql] connected as id ' + dbConnection.threadId);
+});
 
 var connections = [];
 
