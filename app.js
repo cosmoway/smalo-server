@@ -7,7 +7,8 @@ var WebSocketServer = require('ws').Server
     , fs = require('fs')
     , mysql = require('mysql')
     , express = require('express')
-    , app = express();
+    , app = express()
+    , Device = require('./device.js').Device;
 var credentials = {
     key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
     cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
@@ -31,6 +32,11 @@ dbConnection.connect(function(err) {
 });
 
 var connections = [];
+var devices = [];
+
+Device.load(dbConnection, function (results) {
+    devices = results;
+});
 
 wss.on('connection', function (ws) {
     console.log('[DEBUG] open connection.');
