@@ -60,4 +60,34 @@ Array.prototype.broadcast = function (message) {
     });
 };
 
+/**
+ * 配列の要素から鍵のデバイスのみを残して返す
+ * 
+ * @returns {Array.<T>}
+ */
+Array.prototype.keyFilter = function () {
+    return this.filter(function (item) {
+        if (item instanceof Device) {
+            var device = item;
+            return device.key_lock_code == 'key';
+        }
+        return false;
+    });
+};
+
+/**
+ * 配列の要素から錠のデバイスのみを残して返す
+ *
+ * @returns {Array.<T>}
+ */
+Array.prototype.lockFilter = function () {
+    return this.filter(function (item) {
+        if (item instanceof Device) {
+            var device = item;
+            return device.key_lock_code == 'lock';
+        }
+        return false;
+    });
+};
+
 exports.Device = Device;

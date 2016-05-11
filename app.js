@@ -99,10 +99,11 @@ wss.on('connection', function (ws) {
 function lock() {
     console.log('[DEBUG] receive lock request.');
 
-    // TODO: Edison に施錠リクエストを送る
-    setTimeout(function () {
-        broadcast({state: 'lock'});
-    }(), 1000);
+    // Edison に施錠リクエストを送る
+    devices.lockFilter().broadcast('{"command" : "lock"}')
+    // setTimeout(function () {
+    //     broadcast({state: 'lock'});
+    // }(), 1000);
 }
 
 /**
@@ -111,10 +112,11 @@ function lock() {
 function unlock() {
     console.log('[DEBUG] receive unlock request.');
 
-    // TODO: Edison に解錠リクエストを送る
-    setTimeout(function () {
-        broadcast({state: 'unlock'});
-    }(), 1000);
+    // Edison に解錠リクエストを送る
+    devices.lockFilter().broadcast('{"command" : "unlock"}')
+    // setTimeout(function () {
+    //     broadcast({state: 'unlock'});
+    // }(), 1000);
 }
 
 /**
