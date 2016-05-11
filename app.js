@@ -31,7 +31,6 @@ dbConnection.connect(function(err) {
     console.log('[mysql] connected as id ' + dbConnection.threadId);
 });
 
-var connections = [];
 var devices = [];
 
 Device.load(dbConnection, function (results) {
@@ -42,10 +41,7 @@ wss.on('connection', function (ws) {
     console.log('[DEBUG] open connection.');
 
     ws.on('close', function () {
-        connections = connections.filter(function (conn, i) {
-            return (conn !== ws);
-        });
-        console.log('[DEBUG] closed connection. count: %d'.replace(/%d/, connections.length));
+        console.log('[DEBUG] closed connection.');
     });
 
     ws.on('message', function (message) {
@@ -65,13 +61,19 @@ wss.on('connection', function (ws) {
 
             if (uuid != null) {
                 // C-01. 接続時
-                // TODO: UUID 認証をする
-                if (connections.indexOf(ws) < 0) {
-                    connections.push(ws);
-                    console.log('[DEBUG] increase connection count: %d'.replace(/%d/, connections.length));
+                // UUID 認証
+                for (var i = 0; i < devices.length; i++) {
+                    var device = devices[i];
+                    if (device.uuid === uuid) {
+                        device.connection = ws;
 
-                    // TODO: 現在の鍵の状態をクライアントに伝える
-                    ws.send('{"state" : "lock"}');
+                        console.log('[DEBUG] increase connection.');
+
+                        // TODO: 現在の鍵の状態をクライアントに伝える
+                        device.send('{"state" : "lock"}');
+
+                        break;
+                    }
                 }
 
             } else if (command != null) {
@@ -122,9 +124,7 @@ function unlock() {
  */
 function broadcast(object) {
     var message = JSON.stringify(object);
-    connections.forEach(function (con, i) {
-        con.send(message);
-    });
+    devices.broadcast(message);
     console.log('[DEBUG] broadcast message: %s'.replace(/%s/, message));
 }
 

@@ -33,4 +33,31 @@ Device.load = function (dbConnection, callback) {
     });
 };
 
+/**
+ * WebSocket でメッセージを送信する
+ *
+ * @param message
+ */
+Device.prototype.send = function (message) {
+    var connection = this.connection;
+    if (connection != null) {
+        connection.send(message)
+    }
+};
+
+/**
+ * WebSocket でメッセージをブロードキャストする
+ *
+ * @param message
+ */
+Array.prototype.broadcast = function (message) {
+    var array = this;
+    array.forEach(function (item) {
+        if (item instanceof Device) {
+            var device = item;
+            device.send(message);
+        }
+    });
+};
+
 exports.Device = Device;
