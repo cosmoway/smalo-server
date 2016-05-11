@@ -18,16 +18,26 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
     var device_uuid = req.body.uuid;
     var device_name = req.body.name;
     var now = moment().format('YYYY-MM-DD HH:mm:ss');
+    var error;
 
     // バリデーション
     if (device_uuid === undefined || device_name === undefined) {
-        return next(new Error('invalid data1'));
+        error = new Error('validation error: required uuid and name.');
+        error.status = 400;
+        error.status_message = 'Bad Request';
+        return next(error);
     }
     if (device_uuid.length === 0 || device_uuid.length > 36) {
-        return next(new Error('invalid data2'));
+        error = new Error('validation error: uuid length error.');
+        error.status = 400;
+        error.status_message = 'Bad Request';
+        return next(error);
     }
     if (device_name.length === 0 || device_name.length > 50) {
-        return next(new Error('invalid data3'));
+        error = new Error('validation error: name length error.');
+        error.status = 400;
+        error.status_message = 'Bad Request';
+        return next(error);
     }
 
     // 登録データを確認する。
