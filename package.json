@@ -24,8 +24,6 @@
     "errorlog": "^1.4.3",
     "express": "^4.13.4",
     "file-stream-rotator": "0.0.6",
-    "fs": "0.0.2",
-    "https": "^1.0.0",
     "moment": "^2.13.0",
     "morgan": "^1.7.0",
     "mysql": "^2.10.2",
