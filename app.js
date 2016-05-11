@@ -8,6 +8,8 @@ var WebSocketServer = require('ws').Server
     , mysql = require('mysql')
     , express = require('express')
     , bodyParser = require('body-parser')
+    , logger = require('morgan')
+    , fileStreamRotator = require('file-stream-rotator')
     , routesDevices = require('./routes/devices')
     , app = express();
 var credentials = {
@@ -15,9 +17,26 @@ var credentials = {
     cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
 };
 
+// ログ設定
+var logDirectory = __dirname + '/logs';
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
+// アクセスログ（Express）用
+var accessLogStream = fileStreamRotator.getStream({
+    date_format: 'YYYYMMDD',
+    filename: logDirectory + '/access-%DATE%.log',
+    frequency: 'daily',
+    verbose: false
+});
+app.use(logger('combined', {stream: accessLogStream}));
+if (app.get('env') === 'development') {
+    app.use(logger('dev'));
+}
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
+
+// 端末情報登録API
 app.use('/api', routesDevices);
 
 
