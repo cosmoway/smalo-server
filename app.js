@@ -25,10 +25,10 @@ var dbConnection = mysql.createConnection({
 });
 dbConnection.connect(function(err) {
     if (err) {
-        console.error('[mysql] error connecting: ' + err.stack);
+        console.error('[DEBUG] mysql error connecting: ' + err.stack);
         return;
     }
-    console.log('[mysql] connected as id ' + dbConnection.threadId);
+    console.log('[DEBUG] mysql connected as id ' + dbConnection.threadId);
 });
 
 var devices = [];
