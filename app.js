@@ -58,6 +58,7 @@ wss.on('connection', function (ws) {
         try {
             var uuid = jsonObject['uuid'];
             var command = jsonObject['command'];
+            var state = jsonObject['state'];
 
             if (uuid != null) {
                 // C-01. 接続時
@@ -75,15 +76,33 @@ wss.on('connection', function (ws) {
                         break;
                     }
                 }
+            } else {
+                var device = Device.find(devices, {connection: ws});
+                if (device == null) {
+                    return;
+                }
+                if (command != null) {
+                    if (!device.isKey()) {
+                        // 端末が鍵でなければ、コマンドは無効
+                        return;
+                    }
+                    if (command == 'lock') {
+                        // C-02. 施錠リクエスト
+                        lock();
 
-            } else if (command != null) {
-                if (command == 'lock') {
-                    // C-02. 施錠リクエスト
-                    lock();
+                    } else if (command == 'unlock') {
+                        // C-03. 解錠リクエスト
+                        unlock();
+                    }
 
-                } else if (command == 'unlock') {
-                    // C-03. 解錠リクエスト
-                    unlock();
+                } else if (state != null) {
+                    if (!device.isLock()) {
+                        // 端末が錠でなければ、錠の状態は無効
+                        return;
+                    }
+                    // S-01. 鍵の状態の通知
+                    var message = '{"state": "%s" }'.replace(/%s/, state);
+                    devices.keyFilter().broadcast(message);
                 }
             }
         } catch (e) {
@@ -100,10 +119,7 @@ function lock() {
     console.log('[DEBUG] receive lock request.');
 
     // Edison に施錠リクエストを送る
-    devices.lockFilter().broadcast('{"command" : "lock"}')
-    // setTimeout(function () {
-    //     broadcast({state: 'lock'});
-    // }(), 1000);
+    devices.lockFilter().broadcast('{"command" : "lock"}');
 }
 
 /**
@@ -113,10 +129,7 @@ function unlock() {
     console.log('[DEBUG] receive unlock request.');
 
     // Edison に解錠リクエストを送る
-    devices.lockFilter().broadcast('{"command" : "unlock"}')
-    // setTimeout(function () {
-    //     broadcast({state: 'unlock'});
-    // }(), 1000);
+    devices.lockFilter().broadcast('{"command" : "unlock"}');
 }
 
 /**
