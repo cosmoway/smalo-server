@@ -8,7 +8,7 @@ var WebSocketServer = require('ws').Server
     , mysql = require('mysql')
     , express = require('express')
     , bodyParser = require('body-parser')
-    , route_devices = require('./routes/devices')
+    , routesDevices = require('./routes/devices')
     , app = express();
 var credentials = {
     key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
@@ -18,7 +18,7 @@ var credentials = {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
-app.use('/api', route_devices);
+app.use('/api', routesDevices);
 
 
 // catch 404 and forward to error handler
