@@ -11,7 +11,8 @@ var WebSocketServer = require('ws').Server
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
     , routesDevices = require('./routes/devices')
-    , app = express();
+    , app = express()
+    , Device = require('./device.js').Device;
 var credentials = {
     key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
     cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
@@ -75,22 +76,26 @@ var dbConnection = mysql.createConnection({
 });
 dbConnection.connect(function(err) {
     if (err) {
-        console.error('[mysql] error connecting: ' + err.stack);
+        console.error('[DEBUG] mysql error connecting: ' + err.stack);
         return;
     }
-    console.log('[mysql] connected as id ' + dbConnection.threadId);
+    console.log('[DEBUG] mysql connected as id ' + dbConnection.threadId);
 });
 
-var connections = [];
+// 錠の状態
+var currentState = 'unknown';
+// 端末リスト
+var devices = [];
+
+Device.load(dbConnection, function (results) {
+    devices = results;
+});
 
 wss.on('connection', function (ws) {
     console.log('[DEBUG] open connection.');
 
     ws.on('close', function () {
-        connections = connections.filter(function (conn, i) {
-            return (conn !== ws);
-        });
-        console.log('[DEBUG] closed connection. count: %d'.replace(/%d/, connections.length));
+        console.log('[DEBUG] closed connection.');
     });
 
     ws.on('message', function (message) {
@@ -107,26 +112,55 @@ wss.on('connection', function (ws) {
         try {
             var uuid = jsonObject['uuid'];
             var command = jsonObject['command'];
+            var state = jsonObject['state'];
 
             if (uuid != null) {
                 // C-01. 接続時
-                // TODO: UUID 認証をする
-                if (connections.indexOf(ws) < 0) {
-                    connections.push(ws);
-                    console.log('[DEBUG] increase connection count: %d'.replace(/%d/, connections.length));
+                // UUID 認証
+                for (var i = 0; i < devices.length; i++) {
+                    var device = devices[i];
+                    if (device.uuid === uuid) {
+                        device.connection = ws;
 
-                    // TODO: 現在の鍵の状態をクライアントに伝える
-                    ws.send('{"state" : "lock"}');
+                        console.log('[DEBUG] increase connection.');
+
+                        // 現在の錠の状態をクライアントに伝える
+                        if (device.isKey()) {
+                            device.send('{"state" : "%s"}'.replace(/%s/, currentState));
+                        }
+
+                        break;
+                    }
                 }
+            } else {
+                var device = Device.find(devices, {connection: ws});
+                if (device == null) {
+                    return;
+                }
+                if (command != null) {
+                    if (!device.isKey()) {
+                        // 端末が鍵でなければ、コマンドは無効
+                        return;
+                    }
+                    if (command == 'lock') {
+                        // C-02. 施錠リクエスト
+                        lock();
 
-            } else if (command != null) {
-                if (command == 'lock') {
-                    // C-02. 施錠リクエスト
-                    lock();
+                    } else if (command == 'unlock') {
+                        // C-03. 解錠リクエスト
+                        unlock();
+                    }
 
-                } else if (command == 'unlock') {
-                    // C-03. 解錠リクエスト
-                    unlock();
+                } else if (state != null) {
+                    if (!device.isLock()) {
+                        // 端末が錠でなければ、錠の状態は無効
+                        return;
+                    }
+                    currentState = state;
+
+                    // S-01. 鍵の状態の通知
+                    var message = '{"state": "%s" }'.replace(/%s/, currentState);
+                    devices.keyFilter().broadcast(message);
                 }
             }
         } catch (e) {
@@ -142,10 +176,8 @@ wss.on('connection', function (ws) {
 function lock() {
     console.log('[DEBUG] receive lock request.');
 
-    // TODO: Edison に施錠リクエストを送る
-    setTimeout(function () {
-        broadcast({state: 'lock'});
-    }(), 1000);
+    // Edison に施錠リクエストを送る
+    devices.lockFilter().broadcast('{"command" : "lock"}');
 }
 
 /**
@@ -154,10 +186,8 @@ function lock() {
 function unlock() {
     console.log('[DEBUG] receive unlock request.');
 
-    // TODO: Edison に解錠リクエストを送る
-    setTimeout(function () {
-        broadcast({state: 'unlock'});
-    }(), 1000);
+    // Edison に解錠リクエストを送る
+    devices.lockFilter().broadcast('{"command" : "unlock"}');
 }
 
 /**
@@ -167,9 +197,7 @@ function unlock() {
  */
 function broadcast(object) {
     var message = JSON.stringify(object);
-    connections.forEach(function (con, i) {
-        con.send(message);
-    });
+    devices.broadcast(message);
     console.log('[DEBUG] broadcast message: %s'.replace(/%s/, message));
 }
 
