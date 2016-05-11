@@ -31,6 +31,9 @@ dbConnection.connect(function(err) {
     console.log('[DEBUG] mysql connected as id ' + dbConnection.threadId);
 });
 
+// 錠の状態
+var currentState = 'unknown';
+// 端末リスト
 var devices = [];
 
 Device.load(dbConnection, function (results) {
@@ -70,8 +73,10 @@ wss.on('connection', function (ws) {
 
                         console.log('[DEBUG] increase connection.');
 
-                        // TODO: 現在の鍵の状態をクライアントに伝える
-                        device.send('{"state" : "lock"}');
+                        // 現在の錠の状態をクライアントに伝える
+                        if (device.isKey()) {
+                            device.send('{"state" : "%s"}'.replace(/%s/, currentState));
+                        }
 
                         break;
                     }
@@ -100,8 +105,10 @@ wss.on('connection', function (ws) {
                         // 端末が錠でなければ、錠の状態は無効
                         return;
                     }
+                    currentState = state;
+
                     // S-01. 鍵の状態の通知
-                    var message = '{"state": "%s" }'.replace(/%s/, state);
+                    var message = '{"state": "%s" }'.replace(/%s/, currentState);
                     devices.keyFilter().broadcast(message);
                 }
             }
