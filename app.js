@@ -27,6 +27,10 @@ var accessLogStream = fileStreamRotator.getStream({
     frequency: 'daily',
     verbose: false
 });
+// 日付のフォーマットを変更
+logger.token('date', function getDateToken(req, res, format) {
+    return moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+});
 app.use(logger('combined', {stream: accessLogStream}));
 if (app.get('env') === 'development') {
     app.use(logger('dev'));
