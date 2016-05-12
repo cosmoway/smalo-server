@@ -88,9 +88,19 @@ var currentState = 'unknown';
 var devices = [];
 
 Device.load(dbConnection, function (results) {
+    for (var i = 0; i < results.length; i++) {
+        var result = results[i];
+        var device = Device.find(devices, {uuid: result.uuid});
+        result.connection = (device || {}).connection;
+    }
     devices = results;
 });
 Device.setOnChange(dbConnection, function (results) {
+    for (var i = 0; i < results.length; i++) {
+        var result = results[i];
+        var device = Device.find(devices, {uuid: result.uuid});
+        result.connection = (device || {}).connection;
+    }
     devices = results;
     console.log('[DEBUG] device list was updated.');
 });
@@ -136,7 +146,7 @@ wss.on('connection', function (ws) {
                     console.log('[DEBUG] %NAME%: authorized.'.replace(/%NAME%/, device.name));
 
                     // 現在の錠の状態をクライアントに伝える
-                    if (device.isKey()) {
+                    if (device.isEnabled() && device.isKey()) {
                         device.send('{"state" : "%s"}'.replace(/%s/, currentState));
                     }
                 }
