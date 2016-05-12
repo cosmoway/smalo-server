@@ -146,7 +146,7 @@ wss.on('connection', function (ws) {
                     console.log('[DEBUG] %NAME%: authorized.'.replace(/%NAME%/, device.name));
 
                     // 現在の錠の状態をクライアントに伝える
-                    if (device.isKey()) {
+                    if (device.isEnabled() && device.isKey()) {
                         device.send('{"state" : "%s"}'.replace(/%s/, currentState));
                     }
                 }
@@ -179,7 +179,8 @@ wss.on('connection', function (ws) {
 
                     // S-01. 鍵の状態の通知
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
-                    devices.keyFilter().broadcast(message);
+                    var enableOnly = true;
+                    devices.keyFilter().broadcast(message, enableOnly);
                 }
             }
         } catch (e) {
