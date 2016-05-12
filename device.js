@@ -1,8 +1,11 @@
 /**
  * device.js
  */
+var EventEmitter = require('events').EventEmitter;
+var emitter = new EventEmitter;
 
 function Device(param) {
+    param = param || {};
     this.connection = param.connection;
     this.uuid = param.uuid;
     this.name = param.name;
@@ -38,6 +41,27 @@ Device.load = function (dbConnection, callback) {
         if (callback != null) {
             callback(devices);
         }
+    });
+};
+
+/**
+ * デバイスリストの変更を通知するためのトリガーを発行する
+ */
+Device.emitChange = function () {
+    emitter.emit('devicesChanged');
+};
+
+/**
+ * デバイスリスト更新時にデバイスリストを受け取るためのコールバックをセットする
+ *
+ * @param dbConnection
+ * @param callback
+ */
+Device.setOnChange = function (dbConnection, callback) {
+    emitter.on('devicesChanged', function () {
+        console.log('[DEBUG] devices data was changed.');
+        // 最新のデバイスリストを問い合わせる
+        Device.load(dbConnection, callback);
     });
 };
 

@@ -3,6 +3,7 @@ var debug = require('debug')('smalo-server:api:devices');
 var express = require('express');
 var mysql = require('mysql');
 var moment = require('moment');
+var Device = require('../device.js').Device;
 // TODO: mysqlへの接続情報は、configで管理するように。
 var connection = mysql.createConnection({
     host: 'localhost',
@@ -78,6 +79,7 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
                     error.status_message = 'Internal Server Error';
                     return next(error);
                 }
+                Device.emitChange();
                 return res.status(204).end();
             });
         }
@@ -108,6 +110,7 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
                     error.status_message = 'Internal Server Error';
                     return next(error);
                 }
+                Device.emitChange();
                 return res.status(204).end();
             });
         }
