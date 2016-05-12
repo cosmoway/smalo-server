@@ -121,19 +121,15 @@ wss.on('connection', function (ws) {
             if (uuid != null) {
                 // C-01. 接続時
                 // UUID 認証
-                for (var i = 0; i < devices.length; i++) {
-                    var device = devices[i];
-                    if (device.uuid === uuid) {
-                        device.connection = ws;
+                var device = Device.find(devices, {uuid: uuid});
+                if (device != null) {
+                    device.connection = ws;
 
-                        console.log('[DEBUG] %NAME%: authorized.'.replace(/%NAME%/, device.name));
+                    console.log('[DEBUG] %NAME%: authorized.'.replace(/%NAME%/, device.name));
 
-                        // 現在の錠の状態をクライアントに伝える
-                        if (device.isKey()) {
-                            device.send('{"state" : "%s"}'.replace(/%s/, currentState));
-                        }
-
-                        break;
+                    // 現在の錠の状態をクライアントに伝える
+                    if (device.isKey()) {
+                        device.send('{"state" : "%s"}'.replace(/%s/, currentState));
                     }
                 }
             } else {
