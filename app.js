@@ -142,7 +142,8 @@ wss.on('connection', function (ws) {
                 }
             } else {
                 var device = Device.find(devices, {connection: ws});
-                if (device == null) {
+                if (device == null || !device.isEnabled()) {
+                    // TODO: WebSocket コネクションを切断するべき？
                     return;
                 }
                 if (command != null) {

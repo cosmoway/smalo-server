@@ -22,6 +22,10 @@ Device.prototype.isLock = function () {
     return this.key_lock_code == 'lock';
 };
 
+Device.prototype.isEnabled = function () {
+    return this.is_enabled && this.is_registered;
+}
+
 /**
  * devices テーブルから端末一覧を問い合わせる
  *
@@ -116,8 +120,15 @@ Device.find = function (devices, param) {
  * WebSocket でメッセージを送信する
  *
  * @param message
+ * @param enableOnly
  */
-Device.prototype.send = function (message) {
+Device.prototype.send = function (message, enableOnly) {
+    if (enableOnly) {
+        // 有効でない端末には送信しない
+        if (!this.isEnabled()) {
+            return;
+        }
+    }
     var connection = this.connection;
     if (connection != null) {
         console.log('[DEBUG] %NAME%: <=== send message: %MESSAGE%'
@@ -131,15 +142,16 @@ Device.prototype.send = function (message) {
  * WebSocket でメッセージをブロードキャストする
  *
  * @param message
+ * @param enableOnly
  */
-Array.prototype.broadcast = function (message) {
+Array.prototype.broadcast = function (message, enableOnly) {
     var array = this;
     console.log('[DEBUG] broadcast message: %MESSAGE%'
         .replace(/%MESSAGE%/, message));
     array.forEach(function (item) {
         if (item instanceof Device) {
             var device = item;
-            device.send(message);
+            device.send(message, enableOnly);
         }
     });
 };
