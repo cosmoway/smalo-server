@@ -179,7 +179,8 @@ wss.on('connection', function (ws) {
 
                     // S-01. 鍵の状態の通知
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
-                    devices.keyFilter().broadcast(message);
+                    var enableOnly = true;
+                    devices.keyFilter().broadcast(message, enableOnly);
                 }
             }
         } catch (e) {
