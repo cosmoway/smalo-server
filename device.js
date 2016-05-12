@@ -96,6 +96,9 @@ Device.find = function (devices, param) {
 Device.prototype.send = function (message) {
     var connection = this.connection;
     if (connection != null) {
+        console.log('[DEBUG] %NAME%: <=== send message: %MESSAGE%'
+            .replace(/%NAME%/, this.name)
+            .replace(/%MESSAGE%/, message));
         connection.send(message)
     }
 };
@@ -107,6 +110,8 @@ Device.prototype.send = function (message) {
  */
 Array.prototype.broadcast = function (message) {
     var array = this;
+    console.log('[DEBUG] broadcast message: %MESSAGE%'
+        .replace(/%MESSAGE%/, message));
     array.forEach(function (item) {
         if (item instanceof Device) {
             var device = item;
