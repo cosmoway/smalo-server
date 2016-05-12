@@ -95,11 +95,15 @@ wss.on('connection', function (ws) {
     console.log('[DEBUG] open connection.');
 
     ws.on('close', function () {
-        console.log('[DEBUG] closed connection.');
+        var name = (Device.find(devices, {connection: ws}) || {}).name || 'unknown';
+        console.log('[DEBUG] %NAME%: closed connection.'.replace(/%NAME%/, name));
     });
 
     ws.on('message', function (message) {
-        console.log('[DEBUG] received message: %s'.replace(/%s/, message));
+        var name = (Device.find(devices, {connection: ws}) || {}).name || 'unknown';
+        console.log('[DEBUG] %NAME%: ===> received message: %MESSAGE%'
+            .replace(/%NAME%/, name)
+            .replace(/%MESSAGE%/, message));
 
         var jsonObject;
         try {
@@ -122,7 +126,7 @@ wss.on('connection', function (ws) {
                     if (device.uuid === uuid) {
                         device.connection = ws;
 
-                        console.log('[DEBUG] increase connection.');
+                        console.log('[DEBUG] %NAME%: authorized.'.replace(/%NAME%/, device.name));
 
                         // 現在の錠の状態をクライアントに伝える
                         if (device.isKey()) {
@@ -174,7 +178,7 @@ wss.on('connection', function (ws) {
  * 施錠処理
  */
 function lock() {
-    console.log('[DEBUG] receive lock request.');
+    console.log('[DEBUG] do locking.');
 
     // Edison に施錠リクエストを送る
     devices.lockFilter().broadcast('{"command" : "lock"}');
@@ -184,21 +188,10 @@ function lock() {
  * 解錠処理
  */
 function unlock() {
-    console.log('[DEBUG] receive unlock request.');
+    console.log('[DEBUG] do unlocking.');
 
     // Edison に解錠リクエストを送る
     devices.lockFilter().broadcast('{"command" : "unlock"}');
-}
-
-/**
- * 接続されているクライアントにデータを broadcast する
- *
- * @param object
- */
-function broadcast(object) {
-    var message = JSON.stringify(object);
-    devices.broadcast(message);
-    console.log('[DEBUG] broadcast message: %s'.replace(/%s/, message));
 }
 
 server.listen(8443);
