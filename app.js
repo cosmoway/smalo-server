@@ -95,7 +95,11 @@ wss.on('connection', function (ws) {
     console.log('[DEBUG] open connection.');
 
     ws.on('close', function () {
-        var name = (Device.find(devices, {connection: ws}) || {}).name || 'unknown';
+        var device = Device.find(devices, {connection: ws});
+        if (device != null) {
+            device.connection = null;
+        }
+        var name = (device || {}).name || 'unknown';
         console.log('[DEBUG] %NAME%: closed connection.'.replace(/%NAME%/, name));
     });
 
