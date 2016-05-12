@@ -90,6 +90,10 @@ var devices = [];
 Device.load(dbConnection, function (results) {
     devices = results;
 });
+Device.setOnChange(dbConnection, function (results) {
+    devices = results;
+    console.log('[DEBUG] device list was updated.');
+});
 
 wss.on('connection', function (ws) {
     console.log('[DEBUG] open connection.');
