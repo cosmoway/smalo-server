@@ -11,8 +11,10 @@ var WebSocketServer = require('ws').Server
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
     , routesDevices = require('./routes/devices')
+    , ECT = require('ect')
     , app = express()
     , Device = require('./device.js').Device;
+
 var credentials = {
     key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
     cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
@@ -39,6 +41,8 @@ if (app.get('env') === 'development') {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.engine('ect', ECT({watch:true,root:__dirname + '/views', ext:'.ect'}).render);
+app.set('view engine', 'ect');
 app.use(express.static(__dirname + '/public'));
 
 // 端末情報登録API
