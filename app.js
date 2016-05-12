@@ -146,7 +146,7 @@ wss.on('connection', function (ws) {
                     console.log('[DEBUG] %NAME%: authorized.'.replace(/%NAME%/, device.name));
 
                     // 現在の錠の状態をクライアントに伝える
-                    if (device.isKey()) {
+                    if (device.isEnabled() && device.isKey()) {
                         device.send('{"state" : "%s"}'.replace(/%s/, currentState));
                     }
                 }
