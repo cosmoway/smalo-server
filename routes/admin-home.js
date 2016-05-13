@@ -15,7 +15,7 @@ var connection = mysql.createConnection({
 
 var router = express.Router();
 router.get(/^\/$/, function(req, res, next){
-    res.render('admin-home');
+    res.redirect('/admin/logs');
 });
 
 module.exports = router;

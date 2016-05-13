@@ -7,11 +7,14 @@ var WebSocketServer = require('ws').Server
     , fs = require('fs')
     , mysql = require('mysql')
     , express = require('express')
+    , session = require('express-session')
     , bodyParser = require('body-parser')
+    , cookieParser = require('cookie-parser')
     , moment = require('moment')
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
     , routesDevices = require('./routes/devices')
+    , routesAdminLogin = require('./routes/admin-login')
     , routesAdminHome = require('./routes/admin-home')
     , routesAdminLogs = require('./routes/admin-logs')
     , routesAdminDevices = require('./routes/admin-devices')
@@ -45,16 +48,37 @@ if (app.get('env') === 'development') {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.engine('ect', ECT({watch:true,root:__dirname + '/views', ext:'.ect'}).render);
 app.set('view engine', 'ect');
 app.use(express.static(__dirname + '/public'));
 
+// セッション
+app.use(session({
+    secret: 'smart lock',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 60 * 1000
+    }
+}));
+
 // 端末情報登録API
 app.use('/api', routesDevices);
 
+// 管理画面用のセッションチェック
+var sessionCheck = function(req, res, next) {
+    if (req.session.user) {
+        next();
+    } else {
+        res.redirect('/admin/login');
+    }
+};
+
 // 管理画面
+app.use('/admin', routesAdminLogin);
 app.use('/admin', routesAdminHome);
-app.use('/admin', routesAdminLogs);
+app.use('/admin', sessionCheck, routesAdminLogs);
 app.use('/admin', routesAdminDevices);
 
 // catch 404 and forward to error handler
