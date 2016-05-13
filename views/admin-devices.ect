@@ -1,0 +1,41 @@
+<% extend 'admin-layout' %>
+<% include 'admin-header-nav' %>
+<h3>端末一覧</h3>
+<div class="table-responsive">
+<% if @devices?.length : %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>端末情報</th>
+        <th>鍵錠</th>
+        <th>本登録</th>
+        <th>有効</th>
+        <th>登録日時</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for device in @devices : %>
+      <tr>
+        <td><%= device.name %><br />(<%= device.uuid %>)</td>
+        <td><%= device.key_lock_code %></td>
+        <td><% if device.is_registered == 1 : %>
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <% else : %>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        <% end %>
+        </td>
+        <td><% if device.is_enabled == 1 : %>
+          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <% else : %>
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        <% end %>
+        </td>
+        <td><%= device.created %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% else : %>
+    No Devices...
+  <% end %>
+</div>
