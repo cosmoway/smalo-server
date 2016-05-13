@@ -3,7 +3,7 @@ var debug = require('debug')('smalo-server:api:devices');
 var express = require('express');
 var mysql = require('mysql');
 var moment = require('moment');
-var Device = require('../device.js').Device;
+var Device = require('../device').Device;
 // TODO: mysqlへの接続情報は、configで管理するように。
 var connection = mysql.createConnection({
     host: 'localhost',
