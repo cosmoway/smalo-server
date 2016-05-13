@@ -12,6 +12,9 @@ var WebSocketServer = require('ws').Server
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
     , routesDevices = require('./routes/devices')
+    , routesAdminHome = require('./routes/admin-home')
+    , routesAdminLogs = require('./routes/admin-logs')
+    , routesAdminDevices = require('./routes/admin-devices')
     , ECT = require('ect')
     , app = express()
     , Device = require('./device.js').Device;
@@ -49,6 +52,10 @@ app.use(express.static(__dirname + '/public'));
 // 端末情報登録API
 app.use('/api', routesDevices);
 
+// 管理画面
+app.use('/admin', routesAdminHome);
+app.use('/admin', routesAdminLogs);
+app.use('/admin', routesAdminDevices);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
