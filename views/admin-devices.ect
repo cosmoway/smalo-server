@@ -3,7 +3,7 @@
 <h3>端末一覧</h3>
 <div class="table-responsive">
 <% if @devices?.length : %>
-  <table class="table table-striped">
+  <table class="table table-striped" id="device_list">
     <thead>
       <tr>
         <th>端末情報</th>
@@ -18,16 +18,16 @@
       <tr>
         <td><%= device.name %><br />(<%= device.uuid %>)</td>
         <td><%= device.key_lock_code %></td>
-        <td><% if device.is_registered == 1 : %>
-          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <td class="register"><% if device.is_registered == 1 : %>
+          <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <% else : %>
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <button type="button" class="btn btn-warning" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
         <% end %>
         </td>
-        <td><% if device.is_enabled == 1 : %>
-          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <td class="status"><% if device.is_enabled == 1 : %>
+          <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <% else : %>
-          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          <button type="button" class="btn btn-warning" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
         <% end %>
         </td>
         <td><%= device.created %></td>
