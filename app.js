@@ -81,10 +81,11 @@ app.use(function(err, req, res, next) {
 var server = https.createServer(credentials, app);
 var wss = new WebSocketServer({server: server});
 var dbConnection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'smalo',
-    password : 'RoMV35ZMQKKLQa8i',
-    database : 'smalo_db'
+    host        : 'localhost',
+    user        : 'smalo',
+    password    : 'RoMV35ZMQKKLQa8i',
+    database    : 'smalo_db',
+    dateStrings : true
 });
 dbConnection.connect(function(err) {
     if (err) {

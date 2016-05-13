@@ -10,7 +10,8 @@ var connection = mysql.createConnection({
     port: 3306,
     database: 'smalo_db',
     user: 'smalo',
-    password: 'RoMV35ZMQKKLQa8i'
+    password: 'RoMV35ZMQKKLQa8i',
+    dateStrings: true
 });
 
 var router = express.Router();
