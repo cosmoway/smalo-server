@@ -8,6 +8,7 @@ var WebSocketServer = require('ws').Server
     , mysql = require('mysql')
     , express = require('express')
     , bodyParser = require('body-parser')
+    , moment = require('moment')
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
     , routesDevices = require('./routes/devices')
