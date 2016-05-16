@@ -12,6 +12,8 @@ var router = express.Router();
 router.post(/^\/v1\/devices$/, function(req, res, next){
     var device_uuid = req.body.uuid;
     var device_name = req.body.name;
+    var isLock = req.body.isLock || false;
+    var keyLockCode = isLock ? 'lock' : 'key';
     var now = moment().format('YYYY-MM-DD HH:mm:ss');
     var error;
 
@@ -62,7 +64,7 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
 
             now = moment().format('YYYY-MM-DD HH:mm:ss');
             var insert_devices = 'INSERT INTO devices (uuid, name, key_lock_code, created, updated) VALUES (?, ?, ?, ?, ?)';
-            insert_devices = mysql.format(insert_devices, [device_uuid, device_name, 'key', now, now]);
+            insert_devices = mysql.format(insert_devices, [device_uuid, device_name, keyLockCode, now, now]);
             connection.query(insert_devices, function(err, results){
                 debug('[QUERY] ' + insert_devices);
                 if (err) {
@@ -92,8 +94,8 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
             // log.debug('change device name.');
             debug('Change device name!');
             now = moment().format('YYYY-MM-DD HH:mm:ss');
-            var update_devices = 'UPDATE devices SET name = ?, is_registered = ?, is_enabled = ?, updated = ? WHERE uuid = ?';
-            update_devices = mysql.format(update_devices, [device_name, 0, 0, now, device_uuid]);
+            var update_devices = 'UPDATE devices SET name = ?, key_lock_code = ?, is_registered = ?, is_enabled = ?, updated = ? WHERE uuid = ?';
+            update_devices = mysql.format(update_devices, [device_name, keyLockCode, 0, 0, now, device_uuid]);
             connection.query(update_devices, function(err, results){
                 debug('[QUERY] ' + update_devices);
                 if (err) {
