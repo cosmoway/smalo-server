@@ -1,0 +1,27 @@
+<% extend 'admin-layout' %>
+<% include 'admin-header-nav' %>
+<h3>ログ一覧</h3>
+<div class="table-responsive">
+<% if @operationLogs?.length : %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>日時</th>
+        <th>ステータス</th>
+        <th>端末情報</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for log in @operationLogs : %>
+      <tr>
+        <td><%= log.operation_datetime %></td>
+        <td><%= log.lock_status %></td>
+        <td><%= log.device_uuid %><br />(<%= log.device_name%>)</td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <% else : %>
+    No Logs...
+  <% end %>
+</div>

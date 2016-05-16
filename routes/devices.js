@@ -1,17 +1,12 @@
 // devices.js
 var debug = require('debug')('smalo-server:api:devices');
 var express = require('express');
-var mysql = require('mysql');
+var db = require('../lib/mysql-connection');
 var moment = require('moment');
-var Device = require('../device.js').Device;
-// TODO: mysqlへの接続情報は、configで管理するように。
-var connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    database: 'smalo_db',
-    user: 'smalo',
-    password: 'RoMV35ZMQKKLQa8i'
-});
+var config = require('config').database;
+var Device = require('../device').Device;
+var mysql = db.mysql;
+var connection = db.connection;
 
 var router = express.Router();
 router.post(/^\/v1\/devices$/, function(req, res, next){

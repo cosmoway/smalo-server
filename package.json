@@ -20,9 +20,13 @@
   "homepage": "https://github.com/cosmoway/smalo-server#readme",
   "dependencies": {
     "body-parser": "^1.15.1",
+    "config": "^1.20.1",
+    "cookie-parser": "^1.4.1",
     "debug": "^2.2.0",
+    "ect": "^0.5.9",
     "errorlog": "^1.4.3",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
     "file-stream-rotator": "0.0.6",
     "moment": "^2.13.0",
     "morgan": "^1.7.0",
