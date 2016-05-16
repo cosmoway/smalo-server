@@ -5,7 +5,7 @@
 var WebSocketServer = require('ws').Server
     , https = require('https')
     , fs = require('fs')
-    , mysql = require('mysql')
+    , db = require('./lib/mysql-connection')
     , express = require('express')
     , session = require('express-session')
     , bodyParser = require('body-parser')
@@ -105,7 +105,7 @@ app.use(function(err, req, res, next) {
 
 var server = https.createServer(credentials, app);
 var wss = new WebSocketServer({server: server});
-var dbConnection = mysql.createConnection(config.database);
+var dbConnection = db.connection;
 dbConnection.connect(function(err) {
     if (err) {
         console.error('[DEBUG] mysql error connecting: ' + err.stack);

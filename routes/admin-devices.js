@@ -1,12 +1,12 @@
 // admin-devices.js
 var debug = require('debug')('smalo-server:admin:devices');
 var express = require('express');
-var mysql = require('mysql');
+var db = require('../lib/mysql-connection');
 var moment = require('moment');
 var config = require('config').database;
 var Device = require('../device').Device;
-// TODO: mysqlへの接続情報は、configで管理するように。
-var connection = mysql.createConnection(config);
+var mysql = db.mysql;
+var connection = db.connection;
 
 var router = express.Router();
 router.get(/^\/devices\/non_registered$/, function(req, res, next){
