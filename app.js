@@ -3,7 +3,7 @@
  */
 
 var WebSocketServer = require('ws').Server
-    , https = require('https')
+    , http = require('http')
     , fs = require('fs')
     , mysql = require('mysql')
     , express = require('express')
@@ -13,10 +13,6 @@ var WebSocketServer = require('ws').Server
     , routesDevices = require('./routes/devices')
     , app = express()
     , Device = require('./device.js').Device;
-var credentials = {
-    key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
-};
 
 // ログ設定
 var logDirectory = __dirname + '/logs';
@@ -66,7 +62,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-var server = https.createServer(credentials, app);
+var server = http.createServer(app);
 var wss = new WebSocketServer({server: server});
 var dbConnection = mysql.createConnection({
     host     : 'localhost',
@@ -210,4 +206,4 @@ function unlock() {
     devices.lockFilter().broadcast('{"command" : "unlock"}');
 }
 
-server.listen(8443);
+server.listen(5000);
