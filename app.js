@@ -13,6 +13,7 @@ var WebSocketServer = require('ws').Server
     , moment = require('moment')
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
+    , config = require('config')
     , routesDevices = require('./routes/devices')
     , routesAdminLogin = require('./routes/admin-login')
     , routesAdminHome = require('./routes/admin-home')
@@ -104,13 +105,7 @@ app.use(function(err, req, res, next) {
 
 var server = https.createServer(credentials, app);
 var wss = new WebSocketServer({server: server});
-var dbConnection = mysql.createConnection({
-    host        : 'localhost',
-    user        : 'smalo',
-    password    : 'RoMV35ZMQKKLQa8i',
-    database    : 'smalo_db',
-    dateStrings : true
-});
+var dbConnection = mysql.createConnection(config.database);
 dbConnection.connect(function(err) {
     if (err) {
         console.error('[DEBUG] mysql error connecting: ' + err.stack);
