@@ -1,16 +1,17 @@
 <% extend 'admin-layout' %>
 <% include 'admin-header-nav' %>
+<div class="container">
 <h3>端末一覧</h3>
-<div class="table-responsive">
+<div class="alt-table-responsive">
 <% if @devices?.length : %>
   <table class="table table-striped" id="device_list">
     <thead>
       <tr>
-        <th>端末情報</th>
-        <th>鍵錠</th>
-        <th>本登録</th>
-        <th>有効</th>
-        <th>登録日時</th>
+        <th class="col-xs-4 col-sm-7 col-md-7">端末情報</th>
+        <th class="col-xs-2 col-sm-1 col-md-1">鍵錠</th>
+        <th class="col-xs-2 col-sm-1 col-md-1">本登録</th>
+        <th class="col-xs-2 col-sm-1 col-md-1">有効</th>
+        <th class="col-xs-2 col-sm-2 col-md-2">登録日時</th>
       </tr>
     </thead>
     <tbody>
@@ -43,4 +44,5 @@
   <% else : %>
     No Devices...
   <% end %>
+</div>
 </div>

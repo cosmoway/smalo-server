@@ -171,6 +171,14 @@ fieldset[disabled] .btn-ng.focus {
     background-color: #fff;
 }
 
+.alt-table-responsive {
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+}
+
 .table > tbody > tr > td {
     vertical-align: middle;
 }
