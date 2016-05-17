@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 var router = express.Router();
 router.get(/^\/devices\/non_registered$/, function(req, res, next){
     var params = {};
-    var per_page = 2;
+    var per_page = 25;
     var page = 1;
     var query = req.query;
     if (query.page !== undefined && query.page != 0) {
@@ -55,7 +55,7 @@ router.get(/^\/devices\/non_registered$/, function(req, res, next){
 
 router.get(/^\/devices$/, function(req, res, next){
     var params = {};
-    var per_page = 2;
+    var per_page = 25;
     var page = 1;
     var query = req.query;
 
