@@ -170,3 +170,7 @@ fieldset[disabled] .btn-ng.focus {
     color: #f0ad4e;
     background-color: #fff;
 }
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
