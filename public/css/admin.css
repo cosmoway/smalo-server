@@ -38,3 +38,147 @@ body {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+.navbar-brand {
+    color: #29AEC3 !important;
+    letter-spacing: 3px;
+}
+
+.navbar-inverse {
+    Background-color: #333;
+}
+
+/* チェックボタン */
+.btn-ok {
+    color: #fff;
+    background-color: #5cb85c;
+    border: none;
+}
+.btn-ok:focus,
+.btn-ok.focus {
+    color: #fff;
+    background-color: #449d44;
+    border: none;
+}
+.btn-ok:hover {
+    color: #fff;
+    background-color: #449d44;
+    border: none;
+}
+.btn-ok:active,
+.btn-ok.active,
+.open > .dropdown-toggle.btn-ok {
+    color: #fff;
+    background-color: #449d44;
+    border: none;
+}
+.btn-ok:active:hover,
+.btn-ok.active:hover,
+.open > .dropdown-toggle.btn-ok:hover,
+.btn-ok:active:focus,
+.btn-ok.active:focus,
+.open > .dropdown-toggle.btn-ok:focus,
+.btn-ok:active.focus,
+.btn-ok.active.focus,
+.open > .dropdown-toggle.btn-ok.focus {
+    color: #fff;
+    background-color: #398439;
+    border: none;
+}
+.btn-ok:active,
+.btn-ok.active,
+.open > .dropdown-toggle.btn-ok {
+    background-image: none;
+}
+.btn-ok.disabled,
+.btn-ok[disabled] {
+    opacity: 0.45;
+}
+.btn-ok.disabled:hover,
+.btn-ok[disabled]:hover,
+fieldset[disabled] .btn-ok:hover,
+.btn-ok.disabled:focus,
+.btn-ok[disabled]:focus,
+fieldset[disabled] .btn-ok:focus,
+.btn-ok.disabled.focus,
+.btn-ok[disabled].focus,
+fieldset[disabled] .btn-ok.focus {
+    background-color: #5cb85c;
+    border: none;
+}
+.btn-ok .badge {
+    color: #5cb85c;
+    background-color: #fff;
+}
+
+/* バツボタン */
+.btn-ng {
+    color: #fff;
+    background-color: #f0ad4e;
+    border: none;
+}
+
+.btn-ng:focus,
+.btn-ng.focus {
+    color: #fff;
+    background-color: #ec971f;
+    border: none;
+}
+.btn-ng:hover {
+    color: #fff;
+    background-color: #ec971f;
+    border: none;
+}
+.btn-ng:active,
+.btn-ng.active,
+.open > .dropdown-toggle.btn-ng {
+    color: #fff;
+    background-color: #ec971f;
+    border: none;
+}
+.btn-ng:active:hover,
+.btn-ng.active:hover,
+.open > .dropdown-toggle.btn-ng:hover,
+.btn-ng:active:focus,
+.btn-ng.active:focus,
+.open > .dropdown-toggle.btn-ng:focus,
+.btn-ng:active.focus,
+.btn-ng.active.focus,
+.open > .dropdown-toggle.btn-ng.focus {
+    color: #fff;
+    background-color: #d58512;
+    border: none;
+}
+.btn-ng:active,
+.btn-ng.active,
+.open > .dropdown-toggle.btn-ng {
+    background-image: none;
+}
+.btn-ng.disabled:hover,
+.btn-ng[disabled]:hover,
+fieldset[disabled] .btn-ng:hover,
+.btn-ng.disabled:focus,
+.btn-ng[disabled]:focus,
+fieldset[disabled] .btn-ng:focus,
+.btn-ng.disabled.focus,
+.btn-ng[disabled].focus,
+fieldset[disabled] .btn-ng.focus {
+    background-color: #f0ad4e;
+    border: none;
+}
+.btn-ng .badge {
+    color: #f0ad4e;
+    background-color: #fff;
+}
+
+.alt-table-responsive {
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
