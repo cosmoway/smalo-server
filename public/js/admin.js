@@ -63,8 +63,8 @@ $(function(){
 
   //前へボタン
   $('#btn-back').on('click', function(){
-    if (($(this).data('show')%5) == 0) {
-      var num = Math.floor(($(this).data('show'))/5)*5+1
+    if ($(this).data('show') == 5) {
+      var num = 0;
     } else {
       var num = Math.floor(($(this).data('show')-5)/5)*5+1
     }
