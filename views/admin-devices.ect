@@ -17,7 +17,12 @@
       <% for device in @devices : %>
       <tr>
         <td><%= device.name %><br />(<%= device.uuid %>)</td>
-        <td><%= device.key_lock_code %></td>
+        <td><% if device.key_lock_code == 'lock' : %>
+          <img src="/images/icon_lock_gold_locked.png" />
+        <% else : %>
+          <img src="/images/icon_key_silver.png" />
+        <% end %>
+        </td>
         <td class="register"><% if device.is_registered == 1 : %>
           <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <% else : %>
