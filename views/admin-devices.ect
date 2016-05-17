@@ -24,15 +24,15 @@
         <% end %>
         </td>
         <td class="register"><% if device.is_registered == 1 : %>
-          <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-ok" data-uuid="<%= device.uuid %>" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <% else : %>
-          <button type="button" class="btn btn-warning" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-ng" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
         <% end %>
         </td>
         <td class="status"><% if device.is_enabled == 1 : %>
-          <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-ok" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <% else : %>
-          <button type="button" class="btn btn-warning" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-ng" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
         <% end %>
         </td>
         <td><%= device.created %></td>
