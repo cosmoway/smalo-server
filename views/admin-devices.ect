@@ -1,122 +1,39 @@
 <% extend 'admin-layout' %>
 <% include 'admin-header-nav' %>
+<div class="container">
 <h3>端末一覧</h3>
-<div class="table-responsive">
-<nav id = "nav">
-  <ul class="pagination">
-    <% if (@page%5) != 0 : %>
-      <% if Math.floor(@page/5) == 0 : %>
-        <li class="disabled">
-          <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      <% else : %>
-        <li>
-          <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      <% end %>
-    <% else : %>
-      <% if @page == 5 : %>
-        <li class="disabled">
-          <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      <% else : %>
-        <li>
-          <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-      <% end %>
-    <% end %>
-    <% for i in [1..5] : %>
-      <% if (@page%5) != 0 : %>
-        <% if Math.floor(@page/5)*5+i <= @totalPage : %>
-          <% if @register == "registered" : %>
-            <% if @page == Math.floor(@page/5)*5+i : %>
-              <li class="active"><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-            <% else : %>
-              <li><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-            <% end %>
-          <% else if @register == "non_registered" : %>
-            <% if @page == Math.floor(@page/5)*5+i : %>
-              <li class="active"><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-            <% else : %>
-              <li><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% else : %>
-        <% if Math.floor(@page/5)*5+i-5 <= @totalPage : %>
-          <% if @register == "registered" : %>
-            <% if @page == Math.floor(@page/5)*5+i-5 : %>
-              <li class="active"><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-            <% else : %>
-              <li><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-            <% end %>
-          <% else if @register == "non_registered" : %>
-            <% if @page == Math.floor(@page/5)*5+i-5 : %>
-              <li class="active"><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-            <% else : %>
-              <li><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-    <% end %>
-    <% if (@page%5) != 0 : %>
-      <% if Math.floor(@page/5) >= Math.floor(@totalPage/5) : %>
-          <li class="disabled">
-            <a id="btn-next" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-      <% else : %>
-        <li>
-          <a id="btn-next" data-page="<%= @totalPage %>" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      <% end %>
-    <% else : %>
-      <li>
-        <a id="btn-next" data-page="<%= @totalPage %>" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    <% end %>
-  </ul>
-</nav>
+<div class="alt-table-responsive">
 <% if @devices?.length : %>
   <table class="table table-striped" id="device_list">
     <thead>
       <tr>
-        <th>端末情報</th>
-        <th>鍵錠</th>
-        <th>本登録</th>
-        <th>有効</th>
-        <th>登録日時</th>
+        <th class="col-xs-4 col-sm-7 col-md-7">端末情報</th>
+        <th class="col-xs-2 col-sm-1 col-md-1">鍵錠</th>
+        <th class="col-xs-2 col-sm-1 col-md-1">本登録</th>
+        <th class="col-xs-2 col-sm-1 col-md-1">有効</th>
+        <th class="col-xs-2 col-sm-2 col-md-2">登録日時</th>
       </tr>
     </thead>
     <tbody>
       <% for device in @devices : %>
       <tr>
         <td><%= device.name %><br />(<%= device.uuid %>)</td>
-        <td><%= device.key_lock_code %></td>
-        <td class="register"><% if device.is_registered == 1 : %>
-          <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+        <td><% if device.key_lock_code == 'lock' : %>
+          <img src="/images/icon_lock_gold_locked.png" />
         <% else : %>
-          <button type="button" class="btn btn-warning" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+          <img src="/images/icon_key_silver.png" />
+        <% end %>
+        </td>
+        <td class="register"><% if device.is_registered == 1 : %>
+          <button type="button" class="btn btn-ok" data-uuid="<%= device.uuid %>" disabled><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+        <% else : %>
+          <button type="button" class="btn btn-ng" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
         <% end %>
         </td>
         <td class="status"><% if device.is_enabled == 1 : %>
-          <button type="button" class="btn btn-success" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-ok" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
         <% else : %>
-          <button type="button" class="btn btn-warning" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+          <button type="button" class="btn btn-ng" data-uuid="<%= device.uuid %>"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
         <% end %>
         </td>
         <td><%= device.created %></td>
@@ -127,4 +44,96 @@
   <% else : %>
     No Devices...
   <% end %>
+  <div class="text-center">
+  <nav id = "nav">
+    <ul class="pagination">
+      <% if (@page%5) != 0 : %>
+        <% if Math.floor(@page/5) == 0 : %>
+          <li class="disabled">
+            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        <% else : %>
+          <li>
+            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        <% end %>
+      <% else : %>
+        <% if @page == 5 : %>
+          <li class="disabled">
+            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        <% else : %>
+          <li>
+            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        <% end %>
+      <% end %>
+      <% for i in [1..5] : %>
+        <% if (@page%5) != 0 : %>
+          <% if Math.floor(@page/5)*5+i <= @totalPage : %>
+            <% if @register == "registered" : %>
+              <% if @page == Math.floor(@page/5)*5+i : %>
+                <li class="active"><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+              <% else : %>
+                <li><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+              <% end %>
+            <% else if @register == "non_registered" : %>
+              <% if @page == Math.floor(@page/5)*5+i : %>
+                <li class="active"><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+              <% else : %>
+                <li><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% else : %>
+          <% if Math.floor(@page/5)*5+i-5 <= @totalPage : %>
+            <% if @register == "registered" : %>
+              <% if @page == Math.floor(@page/5)*5+i-5 : %>
+                <li class="active"><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+              <% else : %>
+                <li><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+              <% end %>
+            <% else if @register == "non_registered" : %>
+              <% if @page == Math.floor(@page/5)*5+i-5 : %>
+                <li class="active"><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+              <% else : %>
+                <li><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+              <% end %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if (@page%5) != 0 : %>
+        <% if Math.floor(@page/5) >= Math.floor(@totalPage/5) : %>
+            <li class="disabled">
+              <a id="btn-next" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+        <% else : %>
+          <li>
+            <a id="btn-next" data-page="<%= @totalPage %>" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        <% end %>
+      <% else : %>
+        <li>
+          <a id="btn-next" data-page="<%= @totalPage %>" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+  </div>
+</div>
 </div>

@@ -1,18 +1,12 @@
 // admin-login.js
 var debug = require('debug')('smalo-server:admin:login');
 var express = require('express');
-var mysql = require('mysql');
+var db = require('../lib/mysql-connection');
 var moment = require('moment');
 var crypto = require('crypto');
-// TODO: mysqlへの接続情報は、configで管理するように。
-var connection = mysql.createConnection({
-    host: 'localhost',
-    port: 3306,
-    database: 'smalo_db',
-    user: 'smalo',
-    password: 'RoMV35ZMQKKLQa8i',
-    dateStrings: true
-});
+var config = require('config').database;
+var mysql = db.mysql;
+var connection = db.connection;
 
 var router = express.Router();
 router.get(/^\/$/, function(req, res, next){

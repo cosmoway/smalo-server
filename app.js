@@ -3,9 +3,9 @@
  */
 
 var WebSocketServer = require('ws').Server
-    , https = require('https')
+    , http = require('http')
     , fs = require('fs')
-    , mysql = require('mysql')
+    , db = require('./lib/mysql-connection')
     , express = require('express')
     , session = require('express-session')
     , bodyParser = require('body-parser')
@@ -13,6 +13,7 @@ var WebSocketServer = require('ws').Server
     , moment = require('moment')
     , logger = require('morgan')
     , fileStreamRotator = require('file-stream-rotator')
+    , config = require('config')
     , routesDevices = require('./routes/devices')
     , routesAdminLogin = require('./routes/admin-login')
     , routesAdminHome = require('./routes/admin-home')
@@ -21,11 +22,6 @@ var WebSocketServer = require('ws').Server
     , ECT = require('ect')
     , app = express()
     , Device = require('./device.js').Device;
-
-var credentials = {
-    key: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/privkey.pem', 'utf8'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/smalo.cosmoway.net/fullchain.pem', 'utf8')
-};
 
 // ログ設定
 var logDirectory = __dirname + '/logs';
@@ -102,15 +98,9 @@ app.use(function(err, req, res, next) {
     });
 });
 
-var server = https.createServer(credentials, app);
+var server = http.createServer(app);
 var wss = new WebSocketServer({server: server});
-var dbConnection = mysql.createConnection({
-    host        : 'localhost',
-    user        : 'smalo',
-    password    : 'RoMV35ZMQKKLQa8i',
-    database    : 'smalo_db',
-    dateStrings : true
-});
+var dbConnection = db.connection;
 dbConnection.connect(function(err) {
     if (err) {
         console.error('[DEBUG] mysql error connecting: ' + err.stack);
@@ -247,4 +237,4 @@ function unlock() {
     devices.lockFilter().broadcast('{"command" : "unlock"}');
 }
 
-server.listen(8443);
+server.listen(5000);

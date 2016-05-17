@@ -1,0 +1,10 @@
+{
+    "database": {
+        "host": "localhost",
+        "port": 3306,
+        "user": "smalo",
+        "password": "RoMV35ZMQKKLQa8i",
+        "database": "smalo_db",
+        "dateStrings": true
+    }
+}
