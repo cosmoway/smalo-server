@@ -4,7 +4,7 @@
 <div class="table-responsive">
 <nav id = "nav">
   <ul class="pagination">
-    <% if @page == 1 : %>
+    <% if Math.floor(@page/5) == 0 : %>
       <li class="disabled">
         <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
