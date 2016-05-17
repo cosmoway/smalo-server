@@ -39,6 +39,15 @@ body {
     border-top-right-radius: 0;
 }
 
+.navbar-brand {
+    color: #29AEC3 !important;
+    letter-spacing: 3px;
+}
+
+.navbar-inverse {
+    Background-color: #333;
+}
+
 /* チェックボタン */
 .btn-ok {
     color: #fff;
