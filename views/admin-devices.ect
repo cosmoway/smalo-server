@@ -25,6 +25,12 @@
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
+      <% else : %>
+        <li>
+          <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
       <% end %>
     <% end %>
     <% for i in [1..5] : %>
