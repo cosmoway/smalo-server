@@ -7,8 +7,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th class="col-xs-4 col-sm-4 col-md-6">日時</th>
-          <th class="col-xs-2 col-sm-2 col-md-2">ステータス</th>
+          <th class="col-xs-4 col-sm-4 col-md-4">日時</th>
+          <th class="col-xs-1 col-sm-1 col-md-2">アクション</th>
+          <th class="col-xs-1 col-sm-1 col-md-2">ステータス</th>
           <th class="col-xs-6 col-sm-6 col-md-4">端末情報</th>
         </tr>
       </thead>
@@ -16,7 +17,23 @@
         <% for log in @operationLogs : %>
         <tr>
           <td><%= log.operation_datetime %></td>
-          <td><%= log.lock_status %></td>
+          <% if log.lock_status == "locking" || log.lock_status == "unlocking" : %>
+            <% if log.lock_status == "locking" : %>
+              <td><%= log.lock_status %></td>
+            <% else : %>
+              <td><%= log.lock_status %></td>
+            <% end %>
+            <td></td>
+          <% else : %>
+            <td></td>
+            <% if log.lock_status == "locked" : %>
+              <td><%= log.lock_status %></td>
+            <% else if log.lock_status == "unlocked" : %>
+              <td><%= log.lock_status %></td>
+            <% else : %>
+              <td><%= log.lock_status %></td>
+            <% end %>
+          <% end %>
           <td><%= log.device_uuid %><br />(<%= log.device_name%>)</td>
         </tr>
         <% end %>
