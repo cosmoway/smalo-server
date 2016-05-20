@@ -77,6 +77,33 @@ $(function(){
       }
     }
   });
+  
+  //次へボタン
+  $('#logs-btn-next').on('click', function(){
+    if (($(this).data('show')%5) == 0) {
+      var num = Math.floor($(this).data('show')/5)*5+1
+    } else {
+      var num = Math.floor(($(this).data('show')+5)/5)*5+1
+    }
+    console.log(num);
+    if (num < $(this).data('page')) {
+      location.href = '/admin/logs?page='+num;
+    }
+  });
+
+  //前へボタン
+  $('#logs-btn-back').on('click', function(){
+    if ((($(this).data('show'))%5) == 0) {
+      var num = Math.floor(($(this).data('show'))/5)*5-9
+    } else {
+      var num = Math.floor(($(this).data('show')-5)/5)*5+1
+    }
+    console.log(num);
+    if (num >= 1) {
+      location.href = '/admin/logs?page='+num;
+    }
+  });
+  
 });
 function getQuerystring(key, default_){
    if (default_==null) default_="";
