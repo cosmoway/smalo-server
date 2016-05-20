@@ -10,16 +10,16 @@ var connection = db.connection;
 var router = express.Router();
 router.get(/^\/logs$/, function(req, res, next){
     var params = {};
-    var per_page = 2;
+    var per_page = 25;
     var page = 1;
     var query = req.query;
     if (query.page !== undefined && query.page != 0) {
         page = parseInt(query.page);
     }
     var cnt = 0;
-    var count_devices = 'SELECT count(*) AS cnt FROM devices';
-    connection.query(count_devices, function(err, results){
-        debug('[QUERY] ' + count_devices);
+    var count_logs = 'SELECT count(*) AS cnt FROM operation_logs';
+    connection.query(count_logs, function(err, results){
+        debug('[QUERY] ' + count_logs);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));
         }
