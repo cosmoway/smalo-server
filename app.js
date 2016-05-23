@@ -21,7 +21,10 @@ var WebSocketServer = require('ws').Server
     , routesAdminDevices = require('./routes/admin-devices')
     , ECT = require('ect')
     , app = express()
+    , slack = require('simple-slack-webhook')
     , Device = require('./device.js').Device;
+
+slack.init({ path: process.env.SLACK_WEBHOOK_URL });
 
 // ログ設定
 var logDirectory = __dirname + '/logs';
@@ -113,6 +116,8 @@ dbConnection.connect(function(err) {
 var currentState = 'unknown';
 // 端末リスト
 var devices = [];
+// 最後の実行コマンドに関する情報
+var lastCommandInfo = null;
 
 Device.load(dbConnection, function (results) {
     for (var i = 0; i < results.length; i++) {
@@ -196,6 +201,12 @@ wss.on('connection', function (ws) {
                         // C-03. 解錠リクエスト
                         unlock();
                     }
+                    // コマンド実行者情報を一時記憶
+                    lastCommandInfo = {
+                        command: command,
+                        device: device,
+                        date: new Date()
+                    }
 
                 } else if (state != null) {
                     if (!device.isLock()) {
@@ -208,6 +219,25 @@ wss.on('connection', function (ws) {
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
                     var enableOnly = true;
                     devices.keyFilter().broadcast(message, enableOnly);
+
+                    // slack に状態を投稿する
+                    var st = (currentState == 'locked') ? '施錠' :
+                        (currentState == 'unlocked') ? '解錠' : null;
+                    if (st != null) {
+                        var keyDevice = null;
+                        if (lastCommandInfo != null) {
+                            if (lastCommandInfo['command'] == 'lock' && currentState == 'locked'
+                                || lastCommandInfo['command'] == 'unlock' && currentState == 'unlocked') {
+                                keyDevice = lastCommandInfo['device'];
+                            }
+                        }
+                        var keyName = (keyDevice || {}).name || 'manual';
+                        var message = '玄関のドアを%state%しました（ :key: %key%）'
+                            .replace(/%state%/, st)
+                            .replace(/%key%/, keyName);
+                        slack.text(message);
+                    }
+                    lastCommandInfo = null;
                 }
             }
         } catch (e) {
