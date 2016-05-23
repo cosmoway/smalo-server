@@ -21,7 +21,9 @@ var WebSocketServer = require('ws').Server
     , routesAdminDevices = require('./routes/admin-devices')
     , ECT = require('ect')
     , app = express()
-    , Device = require('./device.js').Device;
+    , Device = require('./device.js').Device
+    , OperationLog = require('./lib/operation-log')
+    , operationLog = new OperationLog(db.connection);
 
 // ログ設定
 var logDirectory = __dirname + '/logs';
