@@ -8,8 +8,8 @@
       <thead>
         <tr>
           <th class="col-xs-4 col-sm-4 col-md-4">日時</th>
-          <th class="col-xs-1 col-sm-1 col-md-2">アクション</th>
-          <th class="col-xs-1 col-sm-1 col-md-2">ステータス</th>
+          <th class="col-xs-1 col-sm-1 col-md-2 text-center">アクション</th>
+          <th class="col-xs-1 col-sm-1 col-md-2 text-center">ステータス</th>
           <th class="col-xs-6 col-sm-6 col-md-4">端末情報</th>
         </tr>
       </thead>
@@ -19,19 +19,19 @@
           <td><%= log.operation_datetime %></td>
           <% if log.lock_status == "locking" || log.lock_status == "unlocking" : %>
             <% if log.lock_status == "locking" : %>
-              <td><%= log.lock_status %></td>
+              <td class="text-center"><img src="/images/smalo_log_open.png" /></td>
             <% else : %>
-              <td><%= log.lock_status %></td>
+              <td class="text-center"><img src="/images/smalo_log_close.png" /></td>
             <% end %>
             <td></td>
           <% else : %>
             <td></td>
             <% if log.lock_status == "locked" : %>
-              <td><%= log.lock_status %></td>
+              <td class="text-center"><img src="/images/smalo_log_lock.png" /></td>
             <% else if log.lock_status == "unlocked" : %>
-              <td><%= log.lock_status %></td>
+              <td class="text-center"><img src="/images/smalo_log_unlock.png" /></td>
             <% else : %>
-              <td><%= log.lock_status %></td>
+              <td class="text-center"><img src="/images/smalo_log_unknown.png" /></td>
             <% end %>
           <% end %>
           <td><%= log.device_uuid %><br />(<%= log.device_name%>)</td>
