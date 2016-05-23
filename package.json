@@ -31,6 +31,7 @@
     "moment": "^2.13.0",
     "morgan": "^1.7.0",
     "mysql": "^2.10.2",
+    "simple-slack-webhook": "0.0.5",
     "ws": "^1.1.0"
   }
 }

@@ -21,7 +21,10 @@ var WebSocketServer = require('ws').Server
     , routesAdminDevices = require('./routes/admin-devices')
     , ECT = require('ect')
     , app = express()
+    , slack = require('simple-slack-webhook')
     , Device = require('./device.js').Device;
+
+slack.init({ path: process.env.SLACK_WEBHOOK_URL });
 
 // ログ設定
 var logDirectory = __dirname + '/logs';
@@ -208,6 +211,14 @@ wss.on('connection', function (ws) {
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
                     var enableOnly = true;
                     devices.keyFilter().broadcast(message, enableOnly);
+
+                    // slack に状態を投稿する
+                    var st = (currentState == 'locked') ? '施錠' :
+                        (currentState == 'unlocked') ? '解錠' : null;
+                    if (st != null) {
+                        var message = '玄関のドアを%state%しました'.replace(/%state%/, st);
+                        slack.text(message);
+                    }
                 }
             }
         } catch (e) {
