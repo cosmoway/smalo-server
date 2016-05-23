@@ -43,4 +43,48 @@ $(function(){
       console.log('error');
     });
   });
+
+  //次へボタン
+  $('#btn-next').on('click', function(){
+    if (($(this).data('show')%5) == 0) {
+      var num = Math.floor($(this).data('show')/5)*5+1
+    } else {
+      var num = Math.floor(($(this).data('show')+5)/5)*5+1
+    }
+    console.log(num);
+    if (num < $(this).data('page')) {
+      if ($(this).data('register') == 'registered') {
+        location.href = '/admin/devices?page='+num;
+      } else {
+        location.href = '/admin/devices/non_registered?page='+num;
+      }
+    }
+  });
+
+  //前へボタン
+  $('#btn-back').on('click', function(){
+    if ((($(this).data('show'))%5) == 0) {
+      var num = Math.floor(($(this).data('show'))/5)*5-9
+    } else {
+      var num = Math.floor(($(this).data('show')-5)/5)*5+1
+    }
+    console.log(num);
+    if (num >= 1) {
+      if ($(this).data('register') == 'registered') {
+        location.href = '/admin/devices?page='+num;
+      } else {
+        location.href = '/admin/devices/non_registered?page='+num;
+      }
+    }
+  });
 });
+function getQuerystring(key, default_){
+   if (default_==null) default_="";
+   key = key.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+   var regex = new RegExp("[\\?&]"+key+"=([^&#]*)");
+   var qs = regex.exec(window.location.href);
+   if(qs == null)
+    return default_;
+   else
+    return qs[1];
+}
