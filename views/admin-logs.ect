@@ -1,27 +1,121 @@
 <% extend 'admin-layout' %>
 <% include 'admin-header-nav' %>
-<h3>ログ一覧</h3>
-<div class="table-responsive">
-<% if @operationLogs?.length : %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>日時</th>
-        <th>ステータス</th>
-        <th>端末情報</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for log in @operationLogs : %>
-      <tr>
-        <td><%= log.operation_datetime %></td>
-        <td><%= log.lock_status %></td>
-        <td><%= log.device_uuid %><br />(<%= log.device_name%>)</td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-  <% else : %>
-    No Logs...
-  <% end %>
+<div class="container">
+  <h3>ログ一覧</h3>
+  <div class="alt-table-responsive">
+  <% if @operationLogs?.length : %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="col-xs-4 col-sm-4 col-md-4">日時</th>
+          <th class="col-xs-1 col-sm-1 col-md-2 text-center">アクション</th>
+          <th class="col-xs-1 col-sm-1 col-md-2 text-center">ステータス</th>
+          <th class="col-xs-6 col-sm-6 col-md-4">端末情報</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for log in @operationLogs : %>
+        <tr>
+          <td><%= log.operation_datetime %></td>
+          <% if log.lock_status == "locking" || log.lock_status == "unlocking" : %>
+            <% if log.lock_status == "locking" : %>
+              <td class="text-center"><img src="/images/smalo_log_open.png" /></td>
+            <% else : %>
+              <td class="text-center"><img src="/images/smalo_log_close.png" /></td>
+            <% end %>
+            <td></td>
+          <% else : %>
+            <td></td>
+            <% if log.lock_status == "locked" : %>
+              <td class="text-center"><img src="/images/smalo_log_lock.png" /></td>
+            <% else if log.lock_status == "unlocked" : %>
+              <td class="text-center"><img src="/images/smalo_log_unlock.png" /></td>
+            <% else : %>
+              <td class="text-center"><img src="/images/smalo_log_unknown.png" /></td>
+            <% end %>
+          <% end %>
+          <td><%= log.device_uuid %><br />(<%= log.device_name%>)</td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <% else : %>
+      No Logs...
+    <% end %>
+    <div class="text-center">
+      <nav id = "nav">
+        <ul class="pagination">
+          <% if (@page%5) != 0 : %>
+            <% if Math.floor(@page/5) == 0 : %>
+              <li class="disabled">
+                <a id="logs-btn-back" data-show="<%= @page %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% else : %>
+              <li>
+                <a id="logs-btn-back" data-show="<%= @page %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% end %>
+          <% else : %>
+            <% if @page == 5 : %>
+              <li class="disabled">
+                <a id="logs-btn-back" data-show="<%= @page %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% else : %>
+              <li>
+                <a id="logs-btn-back" data-show="<%= @page %>" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+            <% end %>
+          <% end %>
+          <% for i in [1..5] : %>
+            <% if (@page%5) != 0 : %>
+              <% if Math.floor(@page/5)*5+i <= @totalPage : %>
+                <% if @page == Math.floor(@page/5)*5+i : %>
+                  <li class="active"><a href="/admin/logs?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+                <% else : %>
+                  <li><a href="/admin/logs?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+                <% end %>
+              <% end %>
+            <% else : %>
+              <% if Math.floor(@page/5)*5+i-5 <= @totalPage : %>
+                <% if @page == Math.floor(@page/5)*5+i-5 : %>
+                  <li class="active"><a href="/admin/logs?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+                <% else : %>
+                  <li><a href="/admin/logs?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+                <% end %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <% if (@page%5) != 0 : %>
+            <% if Math.floor(@page/5) >= Math.floor(@totalPage/5) : %>
+                <li class="disabled">
+                  <a id="logs-btn-next" data-show="<%= @page %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+            <% else : %>
+              <li>
+                <a id="logs-btn-next" data-page="<%= @totalPage %>" data-show="<%= @page %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% end %>
+          <% else : %>
+            <li>
+              <a id="logs-btn-next" data-page="<%= @totalPage %>" data-show="<%= @page %>" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </div>
