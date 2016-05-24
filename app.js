@@ -193,24 +193,30 @@ wss.on('connection', function (ws) {
                 var name = (device || {}).name || 'unknown';
                 if (command != null) {
                     // 受け取った内容を代入
-                    var olparams = {
-                      datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
-                      lockStatus : command,
-                      deviceUuid : device.uuid,
-                      deviceName : name
-                    };
                     if (!device.isKey()) {
                         // 端末が鍵でなければ、コマンドは無効
                         return;
                     }
-                    if (command == 'locking') {
+                    if (command == 'lock') {
                         // C-02. 施錠リクエスト
+                        var olparams = {
+                          datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
+                          lockStatus : "locking",
+                          deviceUuid : device.uuid,
+                          deviceName : name
+                        };
                         console.log('[DEBUG]command lock:');
                         operationLog.saveLog(olparams);
                         lock();
 
-                    } else if (command == 'unlocking') {
+                    } else if (command == 'unlock') {
                         // C-03. 解錠リクエスト
+                        var olparams = {
+                          datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
+                          lockStatus : "unlocking",
+                          deviceUuid : device.uuid,
+                          deviceName : name
+                        };
                         console.log('[DEBUG]command unlock:');
                         operationLog.saveLog(olparams);
                         unlock();
