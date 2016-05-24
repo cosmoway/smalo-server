@@ -198,13 +198,13 @@ wss.on('connection', function (ws) {
                         // 端末が鍵でなければ、コマンドは無効
                         return;
                     }
-                    if (command == 'locking') {
+                    if (command == 'lock') {
                         // C-02. 施錠リクエスト
                         console.log('[DEBUG]command lock:');
                         operationLog.saveLog(olparams);
                         lock();
 
-                    } else if (command == 'unlocking') {
+                    } else if (command == 'unlock') {
                         // C-03. 解錠リクエスト
                         console.log('[DEBUG]command unlock:');
                         operationLog.saveLog(olparams);
