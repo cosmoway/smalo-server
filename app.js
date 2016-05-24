@@ -22,7 +22,9 @@ var WebSocketServer = require('ws').Server
     , ECT = require('ect')
     , app = express()
     , slack = require('simple-slack-webhook')
-    , Device = require('./device.js').Device;
+    , Device = require('./device.js').Device
+    , OperationLog = require('./lib/operation-log')
+    , operationLog = new OperationLog(db.connection);
 
 slack.init({ path: process.env.SLACK_WEBHOOK_URL });
 
@@ -188,17 +190,29 @@ wss.on('connection', function (ws) {
                     // TODO: WebSocket コネクションを切断するべき？
                     return;
                 }
+                var name = (device || {}).name || 'unknown';
                 if (command != null) {
+                    // 受け取った内容を代入
+                    var olparams = {
+                      datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
+                      lockStatus : command,
+                      deviceUuid : device.uuid,
+                      deviceName : name
+                    };
                     if (!device.isKey()) {
                         // 端末が鍵でなければ、コマンドは無効
                         return;
                     }
-                    if (command == 'lock') {
+                    if (command == 'locking') {
                         // C-02. 施錠リクエスト
+                        console.log('[DEBUG]command lock:');
+                        operationLog.saveLog(olparams);
                         lock();
 
-                    } else if (command == 'unlock') {
+                    } else if (command == 'unlocking') {
                         // C-03. 解錠リクエスト
+                        console.log('[DEBUG]command unlock:');
+                        operationLog.saveLog(olparams);
                         unlock();
                     }
                     // コマンド実行者情報を一時記憶
@@ -214,10 +228,19 @@ wss.on('connection', function (ws) {
                         return;
                     }
                     currentState = state;
+                    // 受け取った内容を代入
+                    var olparams = {
+                      datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
+                      lockStatus : state,
+                      deviceUuid : device.uuid,
+                      deviceName : name
+                    };
 
                     // S-01. 鍵の状態の通知
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
                     var enableOnly = true;
+                    console.log('[DEBUG]command edison:'+ state);
+                    operationLog.saveLog(olparams);
                     devices.keyFilter().broadcast(message, enableOnly);
 
                     // slack に状態を投稿する
