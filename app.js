@@ -183,17 +183,22 @@ wss.on('connection', function (ws) {
                     // TODO: WebSocket コネクションを切断するべき？
                     return;
                 }
+                var name = (device || {}).name || 'unknown';
                 if (command != null) {
+                  var m = moment();
+                  var time = m.format("YYYY-MM-DD HH:mm:ss");
                     if (!device.isKey()) {
                         // 端末が鍵でなければ、コマンドは無効
                         return;
                     }
                     if (command == 'lock') {
                         // C-02. 施錠リクエスト
+                        console.log('[DEBUG]command lock:'+ time +":"+ command +':'+ device.uuid +':'+ name);
                         lock();
 
                     } else if (command == 'unlock') {
                         // C-03. 解錠リクエスト
+                        console.log('[DEBUG]command unlock:'+ time +":"+ command +':'+ device.uuid +':'+ name);
                         unlock();
                     }
 
@@ -207,6 +212,7 @@ wss.on('connection', function (ws) {
                     // S-01. 鍵の状態の通知
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
                     var enableOnly = true;
+                    console.log(state +":"+ message);
                     devices.keyFilter().broadcast(message, enableOnly);
                 }
             }
