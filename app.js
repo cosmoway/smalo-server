@@ -187,20 +187,27 @@ wss.on('connection', function (ws) {
                 }
                 var name = (device || {}).name || 'unknown';
                 if (command != null) {
-                  var m = moment();
-                  var time = m.format("YYYY-MM-DD HH:mm:ss");
+                    // 受け取った内容を代入
+                    var olparams = {
+                      datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
+                      lockStatus : command,
+                      deviceUuid : device.uuid,
+                      deviceName : name
+                    };
                     if (!device.isKey()) {
                         // 端末が鍵でなければ、コマンドは無効
                         return;
                     }
-                    if (command == 'lock') {
+                    if (command == 'locking') {
                         // C-02. 施錠リクエスト
-                        console.log('[DEBUG]command lock:'+ time +":"+ command +':'+ device.uuid +':'+ name);
+                        console.log('[DEBUG]command lock:');
+                        operationLog.saveLog(olparams);
                         lock();
 
-                    } else if (command == 'unlock') {
+                    } else if (command == 'unlocking') {
                         // C-03. 解錠リクエスト
-                        console.log('[DEBUG]command unlock:'+ time +":"+ command +':'+ device.uuid +':'+ name);
+                        console.log('[DEBUG]command unlock:');
+                        operationLog.saveLog(olparams);
                         unlock();
                     }
 
@@ -210,11 +217,19 @@ wss.on('connection', function (ws) {
                         return;
                     }
                     currentState = state;
+                    // 受け取った内容を代入
+                    var olparams = {
+                      datetime : moment().format("YYYY-MM-DD HH:mm:ss"),
+                      lockStatus : state,
+                      deviceUuid : device.uuid,
+                      deviceName : name
+                    };
 
                     // S-01. 鍵の状態の通知
                     var message = '{"state": "%s" }'.replace(/%s/, currentState);
                     var enableOnly = true;
-                    console.log(state +":"+ message);
+                    console.log('[DEBUG]command edison:'+ state);
+                    operationLog.saveLog(olparams);
                     devices.keyFilter().broadcast(message, enableOnly);
                 }
             }
