@@ -94,7 +94,7 @@
             <% end %>
           <% end %>
           <% if (@page%5) != 0 : %>
-            <% if Math.floor(@page/5) >= Math.floor(@totalPage/5) : %>
+            <% if Math.floor(@page/5) >= Math.floor((@totalPage-1)/5) : %>
                 <li class="disabled">
                   <a id="logs-btn-next" data-show="<%= @page %>" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
@@ -108,11 +108,19 @@
               </li>
             <% end %>
           <% else : %>
-            <li>
-              <a id="logs-btn-next" data-page="<%= @totalPage %>" data-show="<%= @page %>" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-              </a>
-            </li>
+            <% if @totalPage == @page : %>
+                <li class="disabled">
+                  <a id="logs-btn-next" data-show="<%= @page %>" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+            <% else : %>
+              <li>
+                <a id="logs-btn-next" data-page="<%= @totalPage %>" data-show="<%= @page %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            <% end %>
           <% end %>
         </ul>
       </nav>

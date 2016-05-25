@@ -86,7 +86,7 @@ $(function(){
       var num = Math.floor(($(this).data('show')+5)/5)*5+1
     }
     console.log(num);
-    if (num < $(this).data('page')) {
+    if (num <= $(this).data('page')) {
       location.href = '/admin/logs?page='+num;
     }
   });
