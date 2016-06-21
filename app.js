@@ -24,7 +24,7 @@ var WebSocketServer = require('ws').Server
     , slack = require('simple-slack-webhook')
     , Device = require('./device.js').Device
     , OperationLog = require('./lib/operation-log')
-    , operationLog = new OperationLog(db.connection);
+    , operationLog = new OperationLog(db.mysqlPool);
 
 slack.init({ path: process.env.SLACK_WEBHOOK_URL });
 
@@ -105,14 +105,6 @@ app.use(function(err, req, res, next) {
 
 var server = http.createServer(app);
 var wss = new WebSocketServer({server: server});
-var dbConnection = db.connection;
-dbConnection.connect(function(err) {
-    if (err) {
-        console.error('[DEBUG] mysql error connecting: ' + err.stack);
-        return;
-    }
-    console.log('[DEBUG] mysql connected as id ' + dbConnection.threadId);
-});
 
 // 錠の状態
 var currentState = 'unknown';
@@ -121,7 +113,7 @@ var devices = [];
 // 最後の実行コマンドに関する情報
 var lastCommandInfo = null;
 
-Device.load(dbConnection, function (results) {
+Device.load(db.mysqlPool, function (results) {
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var device = Device.find(devices, {uuid: result.uuid});
@@ -129,7 +121,7 @@ Device.load(dbConnection, function (results) {
     }
     devices = results;
 });
-Device.setOnChange(dbConnection, function (results) {
+Device.setOnChange(db.mysqlPool, function (results) {
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
         var device = Device.find(devices, {uuid: result.uuid});
@@ -226,7 +218,7 @@ wss.on('connection', function (ws) {
                         command: command,
                         device: device,
                         date: new Date()
-                    }
+                    };
 
                 } else if (state != null) {
                     if (!device.isLock()) {

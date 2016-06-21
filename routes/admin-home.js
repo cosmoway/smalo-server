@@ -5,7 +5,7 @@ var db = require('../lib/mysql-connection');
 var moment = require('moment');
 var config = require('config').database;
 var mysql = db.mysql;
-var connection = db.connection;
+var mysqlPool = db.mysqlPool;
 
 var router = express.Router();
 router.get(/^\/$/, function(req, res, next){

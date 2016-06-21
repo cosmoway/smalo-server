@@ -6,7 +6,7 @@ var moment = require('moment');
 var config = require('config').database;
 var Device = require('../device').Device;
 var mysql = db.mysql;
-var connection = db.connection;
+var mysqlPool = db.mysqlPool;
 
 var router = express.Router();
 router.get(/^\/devices\/non_registered$/, function(req, res, next){
@@ -19,7 +19,7 @@ router.get(/^\/devices\/non_registered$/, function(req, res, next){
     }
     var cnt = 0;
     var count_devices = 'SELECT count(*) AS cnt FROM devices WHERE is_registered = 0';
-    connection.query(count_devices, function(err, results){
+    mysqlPool.query(count_devices, function(err, results){
         debug('[QUERY] ' + count_devices);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));
@@ -37,7 +37,7 @@ router.get(/^\/devices\/non_registered$/, function(req, res, next){
     // 仮登録のデバイスを取得する。ページあたり25件
     var select_devices = 'SELECT * FROM devices WHERE is_registered = 0 ORDER BY created DESC, uuid LIMIT ?, ?';
     select_devices = mysql.format(select_devices, [offset, per_page]);
-    connection.query(select_devices, function(err, results){
+    mysqlPool.query(select_devices, function(err, results){
         debug('[QUERY] ' + select_devices);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));
@@ -58,7 +58,7 @@ router.get(/^\/devices$/, function(req, res, next){
     }
     var cnt = 0;
     var count_devices = 'SELECT count(*) AS cnt FROM devices';
-    connection.query(count_devices, function(err, results){
+    mysqlPool.query(count_devices, function(err, results){
         debug('[QUERY] ' + count_devices);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));
@@ -76,7 +76,7 @@ router.get(/^\/devices$/, function(req, res, next){
     // デバイスを取得する。ページあたり25件
     var select_devices = 'SELECT * FROM devices ORDER BY created DESC, uuid LIMIT ?, ?';
     select_devices = mysql.format(select_devices, [offset, per_page]);
-    connection.query(select_devices, function(err, results){
+    mysqlPool.query(select_devices, function(err, results){
         debug('[QUERY] ' + select_devices);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));
@@ -94,7 +94,7 @@ router.post(/^\/devices\/(?:([-\w]+))\/registered$/, function(req, res, next){
 
     var update_devices = 'UPDATE devices SET is_registered = 1, is_enabled = 1, updated = ? WHERE uuid = ?';
     update_devices = mysql.format(update_devices, [now, device_uuid]);
-    connection.query(update_devices, function(err, results){
+    mysqlPool.query(update_devices, function(err, results){
         debug('[QUERY] ' + update_devices);
         if (err) {
             //log.warn('Database Error. Message: %s. Query: "%s".', err.message, update_devices);
@@ -118,7 +118,7 @@ router.post(/^\/devices\/(?:([-\w]+))\/enabled$/, function(req, res, next){
 
     var update_devices = 'UPDATE devices SET is_enabled = 1, updated = ? WHERE uuid = ?';
     update_devices = mysql.format(update_devices, [now, device_uuid]);
-    connection.query(update_devices, function(err, results){
+    mysqlPool.query(update_devices, function(err, results){
         debug('[QUERY] ' + update_devices);
         if (err) {
             //log.warn('Database Error. Message: %s. Query: "%s".', err.message, update_devices);
@@ -142,7 +142,7 @@ router.post(/^\/devices\/(?:([-\w]+))\/disabled$/, function(req, res, next){
 
     var update_devices = 'UPDATE devices SET is_enabled = 0, updated = ? WHERE uuid = ?';
     update_devices = mysql.format(update_devices, [now, device_uuid]);
-    connection.query(update_devices, function(err, results){
+    mysqlPool.query(update_devices, function(err, results){
         debug('[QUERY] ' + update_devices);
         if (err) {
             //log.warn('Database Error. Message: %s. Query: "%s".', err.message, update_devices);

@@ -6,7 +6,7 @@ var moment = require('moment');
 var crypto = require('crypto');
 var config = require('config').database;
 var mysql = db.mysql;
-var connection = db.connection;
+var mysqlPool = db.mysqlPool;
 
 var router = express.Router();
 router.get(/^\/$/, function(req, res, next){
@@ -30,7 +30,7 @@ router.post(/^\/login$/, function(req, res, next){
     var hashed_password = crypto.createHash('sha256').update(req.body.password).digest('hex');
     var select_admin_accounts = 'SELECT * FROM admin_accounts WHERE is_enabled = 1 AND account_id = ? AND hashed_password = ?';
     select_admin_accounts = mysql.format(select_admin_accounts, [account, hashed_password]);
-    connection.query(select_admin_accounts, function(err, results){
+    mysqlPool.query(select_admin_accounts, function(err, results){
         debug('[QUERY] ' + select_admin_accounts);
         console.log(results);
         console.log(results.length);
