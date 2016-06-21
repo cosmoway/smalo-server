@@ -5,7 +5,7 @@ var db = require('../lib/mysql-connection');
 var moment = require('moment');
 var config = require('config').database;
 var mysql = db.mysql;
-var connection = db.connection;
+var mysqlPool = db.mysqlPool;
 
 var router = express.Router();
 router.get(/^\/logs$/, function(req, res, next){
@@ -18,7 +18,7 @@ router.get(/^\/logs$/, function(req, res, next){
     }
     var cnt = 0;
     var count_logs = 'SELECT count(*) AS cnt FROM operation_logs';
-    connection.query(count_logs, function(err, results){
+    mysqlPool.query(count_logs, function(err, results){
         debug('[QUERY] ' + count_logs);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));
@@ -36,7 +36,7 @@ router.get(/^\/logs$/, function(req, res, next){
     // ログを取得する。ページあたり25件
     var select_logs = 'SELECT * FROM operation_logs ORDER BY operation_datetime DESC, id DESC LIMIT ?, ?';
     select_logs = mysql.format(select_logs, [offset, per_page]);
-    connection.query(select_logs, function(err, results){
+    mysqlPool.query(select_logs, function(err, results){
         debug('[QUERY] ' + select_logs);
         if (err) {
             return next(new Error('erroooooooooooooooooooor'));

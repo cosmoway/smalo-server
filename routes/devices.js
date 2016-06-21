@@ -6,7 +6,7 @@ var moment = require('moment');
 var config = require('config').database;
 var Device = require('../device').Device;
 var mysql = db.mysql;
-var connection = db.connection;
+var mysqlPool = db.mysqlPool;
 
 var router = express.Router();
 router.post(/^\/v1\/devices$/, function(req, res, next){
@@ -46,7 +46,7 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
     // 登録データを確認する。
     var selectDevices = 'SELECT uuid, name, is_registered, is_enabled FROM devices WHERE uuid = ?';
     selectDevices = mysql.format(selectDevices, [deviceUuid]);
-    connection.query(selectDevices, function(err, rows, fields){
+    mysqlPool.query(selectDevices, function(err, rows, fields){
         debug('[QUERY] ' + selectDevices);
         if (err) {
             // log.warn('Database Error. Message: %s. Query: "%s".', err.message, selectDevices);
@@ -65,7 +65,7 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
             now = moment().format('YYYY-MM-DD HH:mm:ss');
             var insertDevices = 'INSERT INTO devices (uuid, name, key_lock_code, created, updated) VALUES (?, ?, ?, ?, ?)';
             insertDevices = mysql.format(insertDevices, [deviceUuid, deviceName, keyLockCode, now, now]);
-            connection.query(insertDevices, function(err, results){
+            mysqlPool.query(insertDevices, function(err, results){
                 debug('[QUERY] ' + insertDevices);
                 if (err) {
                     //log.warn('Database Error. Message: %s. Query: "%s".', err.message, insertDevices);
@@ -96,7 +96,7 @@ router.post(/^\/v1\/devices$/, function(req, res, next){
             now = moment().format('YYYY-MM-DD HH:mm:ss');
             var updateDevices = 'UPDATE devices SET name = ?, key_lock_code = ?, is_registered = ?, is_enabled = ?, updated = ? WHERE uuid = ?';
             updateDevices = mysql.format(updateDevices, [deviceName, keyLockCode, 0, 0, now, deviceUuid]);
-            connection.query(updateDevices, function(err, results){
+            mysqlPool.query(updateDevices, function(err, results){
                 debug('[QUERY] ' + updateDevices);
                 if (err) {
                     //log.warn('Database Error. Message: %s. Query: "%s".', err.message, updateDevices);
