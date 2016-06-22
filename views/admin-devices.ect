@@ -96,7 +96,7 @@
         <% end %>
       <% end %>
       <% if (@page%5) != 0 : %>
-        <% if Math.floor(@page/5) >= Math.floor(@totalPage/5) : %>
+        <% if Math.ceil(@page / 5) >= Math.ceil(@totalPage / 5) : %>
             <li class="disabled">
               <a id="btn-next" data-show="<%= @page %>" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
