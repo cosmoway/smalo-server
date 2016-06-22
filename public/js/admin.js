@@ -46,38 +46,30 @@ $(function(){
 
   //次へボタン
   $('#btn-next').on('click', function(){
-    if (($(this).data('show')%5) == 0) {
-      var num = Math.floor($(this).data('show')/5)*5+1
+    if (($(this).data('show') % 5) == 0) {
+      var num = Math.floor($(this).data('show') / 5) * 5 + 1;
     } else {
-      var num = Math.floor(($(this).data('show')+5)/5)*5+1
+      var num = Math.floor(($(this).data('show') + 5) / 5) * 5 + 1;
     }
     console.log(num);
     if (num < $(this).data('page')) {
-      if ($(this).data('register') == 'registered') {
-        location.href = '/admin/devices?page='+num;
-      } else {
-        location.href = '/admin/devices/non_registered?page='+num;
-      }
+      location.href = location.pathname + '?page=' + num;
     }
   });
 
   //前へボタン
   $('#btn-back').on('click', function(){
     if ((($(this).data('show'))%5) == 0) {
-      var num = Math.floor(($(this).data('show'))/5)*5-9
+      var num = Math.floor(($(this).data('show')) / 5) * 5 - 9;
     } else {
-      var num = Math.floor(($(this).data('show')-5)/5)*5+1
+      var num = Math.floor(($(this).data('show') - 5) / 5) * 5 + 1;
     }
     console.log(num);
     if (num >= 1) {
-      if ($(this).data('register') == 'registered') {
-        location.href = '/admin/devices?page='+num;
-      } else {
-        location.href = '/admin/devices/non_registered?page='+num;
-      }
+      location.href = location.pathname + '?page=' + num;
     }
   });
-  
+
   //次へボタン
   $('#logs-btn-next').on('click', function(){
     if (($(this).data('show')%5) == 0) {
