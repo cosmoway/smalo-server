@@ -50,13 +50,13 @@
       <% if (@page%5) != 0 : %>
         <% if Math.floor(@page/5) == 0 : %>
           <li class="disabled">
-            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+            <a id="btn-back" data-show="<%= @page %>" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
         <% else : %>
           <li>
-            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+            <a id="btn-back" data-show="<%= @page %>" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
@@ -64,13 +64,13 @@
       <% else : %>
         <% if @page == 5 : %>
           <li class="disabled">
-            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+            <a id="btn-back" data-show="<%= @page %>" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
         <% else : %>
           <li>
-            <a id="btn-back" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Previous">
+            <a id="btn-back" data-show="<%= @page %>" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
@@ -79,34 +79,18 @@
       <% for i in [1..5] : %>
         <% if (@page%5) != 0 : %>
           <% if Math.floor(@page/5)*5+i <= @totalPage : %>
-            <% if @register == "registered" : %>
-              <% if @page == Math.floor(@page/5)*5+i : %>
-                <li class="active"><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-              <% else : %>
-                <li><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-              <% end %>
-            <% else if @register == "non_registered" : %>
-              <% if @page == Math.floor(@page/5)*5+i : %>
-                <li class="active"><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-              <% else : %>
-                <li><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
-              <% end %>
+            <% if @page == Math.floor(@page/5)*5+i : %>
+              <li class="active"><a href="?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
+            <% else : %>
+              <li><a href="?page=<%- Math.floor(@page/5)*5+i %>"><%= Math.floor(@page/5)*5+i %></a></li>
             <% end %>
           <% end %>
         <% else : %>
           <% if Math.floor(@page/5)*5+i-5 <= @totalPage : %>
-            <% if @register == "registered" : %>
-              <% if @page == Math.floor(@page/5)*5+i-5 : %>
-                <li class="active"><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-              <% else : %>
-                <li><a href="/admin/devices?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-              <% end %>
-            <% else if @register == "non_registered" : %>
-              <% if @page == Math.floor(@page/5)*5+i-5 : %>
-                <li class="active"><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-              <% else : %>
-                <li><a href="/admin/devices/non_registered?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
-              <% end %>
+            <% if @page == Math.floor(@page/5)*5+i-5 : %>
+              <li class="active"><a href="page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
+            <% else : %>
+              <li><a href="?page=<%- Math.floor(@page/5)*5+i-5 %>"><%= Math.floor(@page/5)*5+i-5 %></a></li>
             <% end %>
           <% end %>
         <% end %>
@@ -114,20 +98,20 @@
       <% if (@page%5) != 0 : %>
         <% if Math.floor(@page/5) >= Math.floor(@totalPage/5) : %>
             <li class="disabled">
-              <a id="btn-next" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
+              <a id="btn-next" data-show="<%= @page %>" aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>
         <% else : %>
           <li>
-            <a id="btn-next" data-page="<%= @totalPage %>" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
+            <a id="btn-next" data-page="<%= @totalPage %>" data-show="<%= @page %>" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
         <% end %>
       <% else : %>
         <li>
-          <a id="btn-next" data-page="<%= @totalPage %>" data-register="<%= @register %>" data-show="<%= @page %>" aria-label="Next">
+          <a id="btn-next" data-page="<%= @totalPage %>" data-show="<%= @page %>" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>

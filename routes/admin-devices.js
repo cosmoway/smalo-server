@@ -7,13 +7,15 @@ var config = require('config').database;
 var Device = require('../device').Device;
 var mysql = db.mysql;
 var connection = db.connection;
-
 var router = express.Router();
+
+// 1ページあたりの表示件数
+var default_per_page = 25;
 
 // 仮登録の端末一覧を取得・表示する。
 router.get(/^\/devices\/non_registered$/, function(req, res, next){
     var params = {};
-    var per_page = 25;
+    var per_page = default_per_page;
     var page = 1;
     var query = req.query;
     if (query.page !== undefined && query.page != 0) {
@@ -31,7 +33,6 @@ router.get(/^\/devices\/non_registered$/, function(req, res, next){
         var totalPage = Math.ceil(cnt / per_page);
         params['totalPage'] = totalPage;
         params['page'] = page;
-        params['register'] = 'non_registered';
         console.log(totalPage);
     });
     var offset = 0;
@@ -53,7 +54,7 @@ router.get(/^\/devices\/non_registered$/, function(req, res, next){
 // 登録されている端末一覧を取得・表示する。
 router.get(/^\/devices\/all$/, function(req, res, next){
     var params = {};
-    var per_page = 25;
+    var per_page = default_per_page;
     var page = 1;
     var query = req.query;
 
@@ -72,7 +73,6 @@ router.get(/^\/devices\/all$/, function(req, res, next){
         var totalPage = Math.ceil(cnt / per_page);
         params['totalPage'] = totalPage;
         params['page'] = page;
-        params['register'] = 'registered';
         console.log(totalPage);
     });
     var offset = 0;
@@ -94,7 +94,7 @@ router.get(/^\/devices\/all$/, function(req, res, next){
 // 有効な端末一覧を取得・表示する。
 router.get([/^\/devices$/, /^\/devices\/enabled$/], function(req, res, next){
     var params = {};
-    var per_page = 25;
+    var per_page = default_per_page;
     var page = 1;
     var query = req.query;
 
@@ -113,7 +113,6 @@ router.get([/^\/devices$/, /^\/devices\/enabled$/], function(req, res, next){
         var totalPage = Math.ceil(cnt / per_page);
         params['totalPage'] = totalPage;
         params['page'] = page;
-        params['register'] = 'registered';
         console.log(totalPage);
     });
     var offset = 0;
